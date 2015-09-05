@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Kulanıcı Islemleri">
+        <EditTextPreference
+            android:key="user_name"
+            android:title="Kullanıcı Adı">
+
+        </EditTextPreference>
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Avatar Yukleme Secenekleri">
+        <ListPreference
+            android:key="avatar_method"
+            android:title="Ag Ayarları"
+            android:dialogTitle="Yuklenecek Ag tipi"
+            android:entries="@array/network_names"
+            android:entryValues="@array/network_types" />
+    </PreferenceCategory>
+</PreferenceScreen>

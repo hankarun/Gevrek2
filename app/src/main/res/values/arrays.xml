@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="network_names">
+        <item>Wifi</item>
+        <item>Wifi + 3G/LTE</item>
+        <item>Edge</item>
+    </string-array>
+
+    <string-array name="network_types">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

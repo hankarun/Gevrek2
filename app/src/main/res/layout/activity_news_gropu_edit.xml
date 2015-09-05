@@ -1,0 +1,17 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.hankarun.gevrek.activities.NewsGropuEditActivity">
+
+    <include
+        android:id="@+id/toolbar10"
+        layout="@layout/app_bar" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment_edit_group"
+        android:name="com.hankarun.gevrek.fragments.NewsGroupEditFragment"
+        tools:layout="@layout/fragment_news_group_edit" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar10"/>
+
+</RelativeLayout>

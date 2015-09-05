@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+    android:id="@+id/toolbar1"
+    layout="@layout/app_bar" />
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
+    android:name="com.hankarun.gevrek.fragments.MessagesFragment"
+    tools:layout="@layout/fragment_messages" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/toolbar1"/>
+
+</RelativeLayout>
