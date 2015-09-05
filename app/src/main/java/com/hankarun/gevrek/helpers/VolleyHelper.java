@@ -45,23 +45,6 @@ public class VolleyHelper{
         queue = VolleySingleton.getInstance().getRequestQueue();
         this.requestType = requestType;
 
-        switch (requestType) {
-            case LOGIN_REQUEST:
-                break;
-            case NEWSGROUP_REQUEST:
-                break;
-            case NEWSGROUP_EDIT_POST_REQUEST:
-                break;
-            case NEWSGROUP_EDIT_REQUEST:
-                break;
-            case COURSES_REQUEST:
-                break;
-            case COURSE_DETAIL_REQUEST:
-                break;
-            default:
-                break;
-        }
-
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
                 new Response.ErrorListener() {
@@ -80,7 +63,7 @@ public class VolleyHelper{
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
+                Map<String, String> params = new HashMap<>();
                 params.put("Content-Type", "application/x-www-form-urlencoded");
                 return params;
             }
