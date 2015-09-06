@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,8 +26,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.hankarun.gevrek.R;
+import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.PostDialogHelper;
+import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.VolleyHelper;
+import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.interfaces.LoginDialogReturn;
 import com.hankarun.gevrek.libs.ConnectionChecker;
 import com.hankarun.gevrek.libs.HttpPages;
@@ -43,7 +47,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
+public class ReadMessageFragment extends Fragment implements LoginDialogReturn,AsyncResponse {
     private TextView from;
     private TextView date;
     private WebView body;
@@ -56,8 +60,9 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
     public int link;
     public ArrayList<CharSequence> link_list;
     public ArrayList<CharSequence> header_list;
-
-
+    public String mid;
+    private Menu menu;
+    private String groupname;
 
     public ReadMessageFragment() {
         // Required empty public constructor
@@ -66,6 +71,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
 
     public void loadMessage(int _link){
         setDialog();
+        mid = link_list.get(link).subSequence(link_list.get(link).toString().indexOf("#")+1,link_list.get(link).length()).toString();
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.READMESSAGES, HttpPages.group_page + link_list.get(_link), new Response.Listener<String>() {
             @Override
@@ -126,6 +132,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
             link = bundle.getInt("message");
             link_list = bundle.getCharSequenceArrayList("list");
             header_list = bundle.getCharSequenceArrayList("headers");
+            groupname = bundle.getString("groupname");
         }
         from = (TextView) rootView.findViewById(R.id.from_text);
         date = (TextView) rootView.findViewById(R.id.date_text);
@@ -140,6 +147,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_read_message, menu);
+        this.menu = menu;
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -157,9 +165,21 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
             postDialogHelper.dialogShow(args, getActivity());
             return true;
         }
+
+        if(id == R.id.action_delete){
+            //NNTP ile delete yapılacak.
+            NNTPHelper nntpHelper = new NNTPHelper(
+                    SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString(),
+                    SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_PASSWORD,"").toString()
+            );
+            nntpHelper.asyncResponse = this;
+            Log.d("nntp",mid + s + groupname + s + " (" +from.getText().toString() + ")");
+            nntpHelper.deleteArticle(mid,s,"metu.ceng." + groupname,s);
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    private String s;
 
     public void onTaskComplete(String html) {
         if (!html.equals("")) {
@@ -197,6 +217,11 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
                 from.setText("");
             }
 
+            Elements es = doc.select("div.np_article_header");
+            s = es.select("a").attr("href");
+            s = s.replace("mailto:","");
+            Log.d("s",s);
+
             date.setText(tmp.substring(dbb + 6, dbb + 20)); //date
 
             Elements bod = doc.select("div.np_article_body");
@@ -204,6 +229,15 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
             String end = "</body></html>";
             body.loadData(start + attach + bod.toString() + end, "text/html; charset=UTF-8", "UTF-8");
             body.setBackgroundColor(0x00000000);
+
+            MenuItem item = menu.findItem(R.id.action_delete);
+            if(s.equals(SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString())){
+                item.setVisible(true);
+            }else{
+                item.setVisible(false);
+            }
+
+
             mDialog.dismiss();
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Problem", Toast.LENGTH_SHORT).show();
@@ -245,5 +279,11 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn {
         getActivity().setResult(1);
         getActivity().finish();
         //Bu activiteyi bitir ve öncekini yenile.
+    }
+
+    @Override
+    public void onResponse(Boolean feed) {
+        //Burada kapanacak, dialog silinecek.
+        getActivity().finish();
     }
 }

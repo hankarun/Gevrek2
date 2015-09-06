@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.hankarun.gevrek.activities.ReadMessageActivity">
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@mipmap/ic_delete"
+        app:showAsAction="always"/>
+        <!-- android:visible="false" -->
+
     <item android:id="@+id/action_settings" android:icon="@mipmap/ic_reply"
         android:title="Add"
         app:showAsAction="always" />

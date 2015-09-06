@@ -21,6 +21,7 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
     public int link;
     public ArrayList<CharSequence> link_list;
     public ArrayList<CharSequence> header_list;
+    public String groupname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(bundle.getString("groupname"));
 
+        groupname = bundle.getString("groupname");
         link = bundle.getInt("message");
         link_list = bundle.getCharSequenceArrayList("list");
         header_list = bundle.getCharSequenceArrayList("headers");
@@ -71,18 +73,6 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
         }
 
     return super.onTouchEvent(touchevent);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void goLeft(){

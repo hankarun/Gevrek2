@@ -68,7 +68,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_read_message, menu);
+        inflater.inflate(R.menu.menu_messages, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
