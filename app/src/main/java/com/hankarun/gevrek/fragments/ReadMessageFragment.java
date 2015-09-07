@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +27,6 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.PostDialogHelper;
-import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.interfaces.LoginDialogReturn;
@@ -43,7 +41,7 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
-import static com.hankarun.gevrek.helpers.SharedPrefHelper.*;
+import static com.hankarun.gevrek.helpers.SharedPrefHelper.readPreferences;
 
 
 /**
