@@ -43,6 +43,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 
+import static com.hankarun.gevrek.helpers.SharedPrefHelper.*;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,6 +65,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     public String mid;
     private Menu menu;
     private String groupname;
+    private Dialog waitDialog;
 
     public ReadMessageFragment() {
         // Required empty public constructor
@@ -167,13 +170,15 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         }
 
         if(id == R.id.action_delete){
+            //Show waiting screen.
+            mDialog.show();
+
             //NNTP ile delete yapılacak.
             NNTPHelper nntpHelper = new NNTPHelper(
-                    SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString(),
-                    SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_PASSWORD,"").toString()
+                    readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME, "").toString(),
+                    readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD, "").toString()
             );
             nntpHelper.asyncResponse = this;
-            Log.d("nntp",mid + s + groupname + s + " (" +from.getText().toString() + ")");
             nntpHelper.deleteArticle(mid,s,"metu.ceng." + groupname,s);
         }
         return super.onOptionsItemSelected(item);
@@ -220,7 +225,6 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             Elements es = doc.select("div.np_article_header");
             s = es.select("a").attr("href");
             s = s.replace("mailto:","");
-            Log.d("s",s);
 
             date.setText(tmp.substring(dbb + 6, dbb + 20)); //date
 
@@ -230,12 +234,13 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             body.loadData(start + attach + bod.toString() + end, "text/html; charset=UTF-8", "UTF-8");
             body.setBackgroundColor(0x00000000);
 
-            MenuItem item = menu.findItem(R.id.action_delete);
-            if(s.equals(SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString())){
+            String username = s.substring(0,s.indexOf("@"));
+            /*MenuItem item = menu.findItem(R.id.action_delete);
+            if(username.equals(SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString())){
                 item.setVisible(true);
             }else{
                 item.setVisible(false);
-            }
+            }*/
 
 
             mDialog.dismiss();
@@ -282,8 +287,9 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     }
 
     @Override
-    public void onResponse(Boolean feed) {
-        //Burada kapanacak, dialog silinecek.
+    public void onResponse(int feed) {
+        mDialog.dismiss();
+        getActivity().setResult(1);
         getActivity().finish();
     }
 }

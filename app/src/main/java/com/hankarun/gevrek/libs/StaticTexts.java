@@ -24,4 +24,8 @@ public class StaticTexts {
     public static final int HOMEWORK_PAGE = 9;
 
     public static final int COURSELIST = 98;
+
+    public static final int FAIL = 0;
+    public static final int SUCCESS = 1;
+    public static final int DELETE_SUCCESS = 2;
 }

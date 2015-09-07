@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.hankarun.gevrek.interfaces.AsyncResponse;
+import com.hankarun.gevrek.libs.StaticTexts;
 
 import org.apache.commons.net.nntp.Article;
 import org.apache.commons.net.nntp.NNTPClient;
@@ -39,9 +40,9 @@ public class NNTPHelper {
         new NNTPConnect1().execute(articleNumber,sender,mGroup,mFrom);
     }
 
-    class NNTPConnect1 extends AsyncTask<String, Boolean, Boolean> {
+    class NNTPConnect1 extends AsyncTask<String, Integer, Integer> {
 
-        protected Boolean doInBackground(String... urls) {
+        protected Integer doInBackground(String... urls) {
             NNTPClient client = new NNTPClient();
 
 
@@ -49,8 +50,7 @@ public class NNTPHelper {
                 client.setSocketFactory(new MySSLSocketFactory());
                 client.connect("news.ceng.metu.edu.tr",563);
                 if(!client.authenticate(username, password)) {
-                    Log.d("test","false");
-                    return false;
+                    return StaticTexts.FAIL;
 
                 }
 
@@ -80,16 +80,16 @@ public class NNTPHelper {
                             writer.write(header1.toString());
                             writer.close();
                             if (client.completePendingCommand())
-                             return true;
+                             return StaticTexts.DELETE_SUCCESS;
                         }
                     }
                 } catch (Exception e) {
                     Log.d("nntp", e.getMessage());
                 }
-            return true;
+            return StaticTexts.DELETE_SUCCESS;
         }
 
-        protected void onPostExecute(Boolean feed) {
+        protected void onPostExecute(Integer feed) {
             asyncResponse.onResponse(feed);
         }
     }
@@ -99,9 +99,9 @@ public class NNTPHelper {
         new NNTPConnect().execute();
     }
 
-    class NNTPConnect extends AsyncTask<String, Boolean, Boolean> {
+    class NNTPConnect extends AsyncTask<String, Integer, Integer> {
 
-        protected Boolean doInBackground(String... urls) {
+        protected Integer doInBackground(String... urls) {
             NNTPClient client = new NNTPClient();
 
 
@@ -109,17 +109,16 @@ public class NNTPHelper {
                 client.setSocketFactory(new MySSLSocketFactory());
                 client.connect("news.ceng.metu.edu.tr",563);
                 if(!client.authenticate(username, password)) {
-                    Log.d("test","false");
-                    return false;
+                    return StaticTexts.FAIL;
 
                 }
             }catch (Exception e){
                 Log.d("nntp", e.getMessage());
             }
-            return true;
+            return StaticTexts.SUCCESS;
         }
 
-        protected void onPostExecute(Boolean feed) {
+        protected void onPostExecute(Integer feed) {
             asyncResponse.onResponse(feed);
         }
     }
@@ -152,7 +151,7 @@ public class NNTPHelper {
 
         @Override
         public Socket createSocket(Socket socket, String host, int port,
-                                   boolean autoClose) throws IOException, UnknownHostException {
+                                   boolean autoClose) throws IOException {
             Socket result = sslContext.getSocketFactory().createSocket(socket,
                     host, port, autoClose);
             //log.debug("Configuring SSLSocket for SSLv3 protocol only");
@@ -184,7 +183,7 @@ public class NNTPHelper {
 
         @Override
         public Socket createSocket(String host, int port)
-                throws IOException, UnknownHostException {
+                throws IOException {
             // TODO Auto-generated method stub
             return null;
         }
@@ -198,8 +197,7 @@ public class NNTPHelper {
 
         @Override
         public Socket createSocket(String host, int port,
-                                   InetAddress localHost, int localPort) throws IOException,
-                UnknownHostException {
+                                   InetAddress localHost, int localPort) throws IOException {
             // TODO Auto-generated method stub
             return null;
         }

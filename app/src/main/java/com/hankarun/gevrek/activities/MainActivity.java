@@ -116,11 +116,14 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
     }
 
     @Override
-    public void onResponse(Boolean feed) {
-        if(!feed) {
-            startLogin();
-        }else{
-            loadusername();
+    public void onResponse(int feed) {
+        switch(feed) {
+            case StaticTexts.FAIL:
+                startLogin();
+                break;
+            case StaticTexts.SUCCESS:
+                loadusername();
+                break;
         }
     }
 
@@ -179,10 +182,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (drawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -241,10 +241,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
                 //Refresh fragment
                 reloadNewsFragment();
         }
-        if(requestCode==2) {
+        /*if(requestCode==2) {
             //selectDrawerItem(nvDrawer.getMenu().getItem(1));
             //Show courses fragment
-        }
+        }*/
     }
 
     private void reloadNewsFragment(){

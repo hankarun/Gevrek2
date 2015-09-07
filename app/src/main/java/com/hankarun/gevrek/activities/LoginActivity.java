@@ -110,18 +110,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onResponse(Boolean feed) {
-        if(feed) {
-            //Bilgileri kaydedecek.
-            saveCreds(mUsername.getText().toString(), mPassword.getText().toString());
+    public void onResponse(int feed) {
+        switch (feed) {
+            case StaticTexts.SUCCESS:
+                //Bilgileri kaydedecek.
+                saveCreds(mUsername.getText().toString(), mPassword.getText().toString());
 
-            finish();
-            //Kaybolacak
-            mDialog.dismiss();
+                finish();
+                //Kaybolacak
+                mDialog.dismiss();
+                break;
+            case StaticTexts.FAIL:
+                mDialog.dismiss();
+                break;
         }
-        else{
-            mDialog.dismiss();
-        }
+
     }
 
     public boolean validate() {

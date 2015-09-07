@@ -98,10 +98,5 @@ public class MessagesActivity extends AppCompatActivity {
             articleFrag.loadPages();
 
         }
-        if(requestCode==2) {
-            //selectDrawerItem(nvDrawer.getMenu().getItem(1));
-            //Show courses fragment
-
-        }
     }
 }

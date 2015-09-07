@@ -159,6 +159,7 @@ public class PostDialogHelper extends Dialog implements
 
     private void postMessage() {
         dismiss();
+        mDialog.show();
         volleyHelper = new VolleyHelper(activity);
         volleyHelper.params.put("body", mBody.getText().toString());
         volleyHelper.params.put("references", references);
@@ -170,7 +171,7 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.post_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                mDialog.show();
+                mDialog.dismiss();
                 answer.dialogFinished();
                 //Gonderildi dismiss yap ve sayfayı yenile
             }
