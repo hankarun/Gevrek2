@@ -3,10 +3,9 @@ package com.hankarun.gevrek.helpers;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,20 +27,20 @@ import org.jsoup.select.Elements;
 public class PostDialogHelper extends Dialog implements
         android.view.View.OnClickListener {
 
-    Button mSendButton;
-    Button mCancelButton;
-    EditText mSubject;
-    EditText mBody;
-    CheckBox mAddQuoteCheck;
-    Context context;
-    VolleyHelper volleyHelper;
-    Activity activity;
-    String quote;
-    String newsgroups;
-    String newsgroup;
-    String references;
-    int mDialogType;
-    String from;
+    private Button mSendButton;
+    private Button mCancelButton;
+    private EditText mSubject;
+    private EditText mBody;
+    private CheckBox mAddQuoteCheck;
+    private Context context;
+    private VolleyHelper volleyHelper;
+    private Activity activity;
+    private String quote;
+    private String newsgroups;
+    private String newsgroup;
+    private String references;
+    private int mDialogType;
+    private String from;
     public Dialog mDialog;
 
     public LoginDialogReturn answer;
@@ -49,6 +48,18 @@ public class PostDialogHelper extends Dialog implements
     public PostDialogHelper(Context context) {
         super(context);
         this.context = context;
+        dialogHelper = new WaitDialogHelper(context);
+        dialogHelper.setOnKeyListener(new OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                if ((keyCode == KeyEvent.KEYCODE_BACK))
+                {
+                    //Back passed cancel everyting.
+
+                }
+                return false;
+            }
+        });
     }
 
     @Override
@@ -81,22 +92,6 @@ public class PostDialogHelper extends Dialog implements
 
     }
 
-    private void setDialog(){
-        mDialog = new Dialog(context);
-
-
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        mDialog.setContentView(R.layout.custom_dialog);
-        mDialog.setCancelable(false);
-
-        final Window window = mDialog.getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
-
     @Override
     public void onClick(View v) {
         switch(v.getId()) {
@@ -118,13 +113,15 @@ public class PostDialogHelper extends Dialog implements
         }
     }
 
+    WaitDialogHelper dialogHelper;
+
     public void dialogShow(Bundle b, Activity activity){
         this.activity = activity;
         mDialogType = b.getInt("type");
         //Get type of the dialog
         getReplyPage(b.getString("link"));
-        setDialog();
-        mDialog.show();
+
+        dialogHelper.show();
     }
 
     private void getReplyPage(String link){
@@ -132,7 +129,7 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, link, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                mDialog.dismiss();
+                dialogHelper.dismiss();
                 show();
                 if (response != null) {
                     Document doc = Jsoup.parse(response);
@@ -159,7 +156,7 @@ public class PostDialogHelper extends Dialog implements
 
     private void postMessage() {
         dismiss();
-        mDialog.show();
+        dialogHelper.show();
         volleyHelper = new VolleyHelper(activity);
         volleyHelper.params.put("body", mBody.getText().toString());
         volleyHelper.params.put("references", references);
@@ -171,7 +168,7 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.post_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                mDialog.dismiss();
+                dialogHelper.dismiss();
                 answer.dialogFinished();
                 //Gonderildi dismiss yap ve sayfayı yenile
             }
