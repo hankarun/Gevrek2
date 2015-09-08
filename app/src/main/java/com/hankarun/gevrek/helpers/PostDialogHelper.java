@@ -168,8 +168,8 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.post_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                dialogHelper.dismiss();
                 answer.dialogFinished();
+                dialogHelper.dismiss();
                 //Gonderildi dismiss yap ve sayfayı yenile
             }
         });

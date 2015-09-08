@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -107,6 +108,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     };
 
     public void loadPages(){
+        mProgressBar.setVisibility(View.VISIBLE);
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.MESSAGE_LIST_REQUEST, HttpPages.group_page+link, new Response.Listener<String>() {
             @Override
