@@ -4,11 +4,12 @@
     tools:context="com.hankarun.gevrek.activities.ReadMessageActivity">
     <item
         android:id="@+id/action_delete"
-        android:icon="@mipmap/ic_delete"
+        android:title="test"
+        android:icon="@drawable/ic_delete_red_400_36dp"
         app:showAsAction="always"/>
         <!-- android:visible="false" -->
 
-    <item android:id="@+id/action_settings" android:icon="@mipmap/ic_reply"
+    <item android:id="@+id/action_settings" android:icon="@drawable/ic_reply_white_48dp"
         android:title="Add"
         app:showAsAction="always" />
 </menu>
