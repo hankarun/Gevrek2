@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
         setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //Toolbar will now take on default actionbar characteristics
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -157,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
         drawerToggle.syncState();
 
     }
@@ -165,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        // Pass any configuration change to the drawer toggles
         drawerToggle.onConfigurationChanged(newConfig);
     }
 
@@ -186,8 +183,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+
             Fragment fragment = null;
             String fragmentName = "";
         if(checkUsername){
@@ -223,11 +219,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
                 e.printStackTrace();
             }
 
-            // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.container_body, fragment, fragmentName).commit();
 
-            // Highlight the selected item, update the title, and close the drawer
             menuItem.setChecked(true);
             setTitle(menuItem.getTitle());
             mDrawer.closeDrawers();

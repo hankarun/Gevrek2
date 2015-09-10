@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.SharedPrefHelper;
+import com.hankarun.gevrek.helpers.WaitDialogHelper;
 import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.libs.StaticTexts;
 
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_LOGINNAME, "");
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -68,35 +70,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
-    private void setDialog(){
-        mDialog = new Dialog(this);
-
-
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        mDialog.setContentView(R.layout.custom_dialog);
-        mDialog.setCancelable(false);
-
-        final Window window = mDialog.getWindow();
-        //window.setLayout(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-    }
-
     @Override
     public void onBackPressed() {
-        // disable going back to the MainActivity
         moveTaskToBack(true);
     }
 
     @Override
     public void onClick(View v) {
-        //Bekleme ekranı eklenecek
-
-        //nntp ile kontrol edilecek.
         if(validate()) {
-            setDialog();
+            mDialog = new WaitDialogHelper(getApplicationContext());
             mDialog.show();
             NNTPHelper helper = new NNTPHelper(mUsername.getText().toString(), mPassword.getText().toString());
             helper.asyncResponse = this;

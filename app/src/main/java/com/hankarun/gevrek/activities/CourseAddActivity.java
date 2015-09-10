@@ -18,7 +18,7 @@ public class CourseAddActivity extends AppCompatActivity {
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar78);
-        //Toolbar will now take on default actionbar characteristics
+
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);

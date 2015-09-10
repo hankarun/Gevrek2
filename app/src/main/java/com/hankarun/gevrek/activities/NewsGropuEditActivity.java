@@ -18,7 +18,6 @@ public class NewsGropuEditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_news_gropu_edit);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar10);
-        //Toolbar will now take on default actionbar characteristics
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -37,12 +36,8 @@ public class NewsGropuEditActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
