@@ -56,14 +56,7 @@ public class NewsGroupFragment extends Fragment {
 
     private VolleyHelper volleyHelper;
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NewsGroupFragment.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static NewsGroupFragment newInstance(String param1, String param2) {
         NewsGroupFragment fragment = new NewsGroupFragment();
@@ -192,7 +185,7 @@ public class NewsGroupFragment extends Fragment {
             });
             adapter.notifyDataSetChanged();
         }else{
-            Toast.makeText(getActivity().getApplicationContext(), "Problem", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }

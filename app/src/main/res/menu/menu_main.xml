@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.hankarun.gevrek.activities.MainActivity">
     <item android:id="@+id/action_settings" android:icon="@mipmap/plus"
-        android:title="Add"
+        android:title="@string/add"
         app:showAsAction="always" />
 </menu>

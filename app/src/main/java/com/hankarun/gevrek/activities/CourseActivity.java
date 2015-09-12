@@ -43,8 +43,8 @@ public class CourseActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(b.getString("name"));
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Homeworks"));
-        tabLayout.addTab(tabLayout.newTab().setText("Course Details"));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.homeworks));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.course_details));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);

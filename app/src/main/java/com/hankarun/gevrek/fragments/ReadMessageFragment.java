@@ -243,7 +243,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
             mDialog.dismiss();
         } else {
-            Toast.makeText(getActivity().getApplicationContext(), "Problem", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
 

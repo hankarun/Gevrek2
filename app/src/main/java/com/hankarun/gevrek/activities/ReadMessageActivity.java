@@ -83,7 +83,7 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
             readFrag.loadMessage(link);
         }
         else {
-            Toast.makeText(getApplicationContext(), "You reached first message.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.you_reached_first_message, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -95,7 +95,7 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
             readFrag.loadMessage(link);
         }
         else {
-            Toast.makeText(getApplicationContext(), "You reached last message.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.you_reached_last_message, Toast.LENGTH_SHORT).show();
         }
     }
 

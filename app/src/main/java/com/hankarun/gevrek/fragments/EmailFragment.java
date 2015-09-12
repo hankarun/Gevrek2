@@ -16,11 +16,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.hankarun.gevrek.R;
+import com.hankarun.gevrek.helpers.SharedPrefHelper;
+import com.hankarun.gevrek.libs.StaticTexts;
 
 public class EmailFragment extends Fragment {
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private String mParam1;
     private String mParam2;
@@ -31,8 +30,6 @@ public class EmailFragment extends Fragment {
     public static EmailFragment newInstance(String param1, String param2) {
         EmailFragment fragment = new EmailFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,10 +41,7 @@ public class EmailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
         CookieSyncManager.createInstance(getActivity());
         CookieManager cookieManager=CookieManager.getInstance();
         cookieManager.removeAllCookie();
@@ -86,13 +80,15 @@ public class EmailFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                webView.loadUrl("javascript: {document.getElementsByName('_user')[0].value ='" + "e175903" + "';" +
-                      "document.getElementsByName('_pass')[0].value = '" + "For9876um" + "';" +
+                webView.loadUrl("javascript: {document.getElementsByName('_user')[0].value ='" +
+                        SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME,"") + "';" +
+                      "document.getElementsByName('_pass')[0].value = '" +
+                        SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD,"")+ "';" +
                       "var frms = document.getElementsByName('form');" +
                        "frms[0].submit();};");
             }
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                Toast.makeText(activity, "Oh no! " + description, Toast.LENGTH_SHORT).show();
+                Toast.makeText(activity, activity.getString(R.string.oh_no) + description, Toast.LENGTH_SHORT).show();
             }
         });
 

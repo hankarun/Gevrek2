@@ -9,7 +9,7 @@
         android:id="@+id/subjectText"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:hint="Subject" />
+        android:hint="@string/subject" />
 
     <EditText
         android:layout_width="match_parent"
@@ -20,14 +20,14 @@
         android:layout_below="@+id/subjectText"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/quoteCheckBox"
-        android:hint="Text"
+        android:hint="@string/body"
         android:longClickable="false"
         android:textAlignment="viewStart" />
 
     <CheckBox
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add previus message"
+        android:text="@string/quote"
         android:id="@+id/quoteCheckBox"
         android:layout_above="@+id/linearLayout"
         android:layout_alignParentStart="true" />
@@ -43,14 +43,14 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send"
+            android:text="@string/send"
             android:id="@+id/postButton"
             android:layout_weight="0.5" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:id="@+id/cancelButton"
             android:layout_weight="0.5" />
     </LinearLayout>

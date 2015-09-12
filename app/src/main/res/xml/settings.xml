@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:title="Kulanıcı Islemleri">
+        android:title="@string/active_user">
         <EditTextPreference
             android:key="user_name"
-            android:title="Kullanıcı Adı">
+            android:title="@string/change_username">
 
         </EditTextPreference>
     </PreferenceCategory>
     <PreferenceCategory
-        android:title="Avatar Yukleme Secenekleri">
+        android:title="@string/bandwidth_control">
         <ListPreference
             android:key="avatar_method"
-            android:title="Ag Ayarları"
-            android:dialogTitle="Yuklenecek Ag tipi"
+            android:title="@string/avatar_download_options"
+            android:dialogTitle="@string/download_when"
             android:entries="@array/network_names"
             android:entryValues="@array/network_types" />
     </PreferenceCategory>

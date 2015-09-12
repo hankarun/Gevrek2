@@ -244,7 +244,7 @@ public class NewsGroupEditFragment extends Fragment {
             adapter = new GroupListAdapter(getActivity().getApplicationContext(), groups);
             listview.setAdapter(adapter);
         }else{
-            Toast.makeText(getActivity().getApplicationContext(), "Porblem", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
 

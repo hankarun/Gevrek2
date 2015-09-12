@@ -84,7 +84,6 @@ public class NNTPHelper {
                         }
                     }
                 } catch (Exception e) {
-                    Log.d("nntp", e.getMessage());
                 }
             return StaticTexts.DELETE_SUCCESS;
         }
@@ -113,7 +112,6 @@ public class NNTPHelper {
 
                 }
             }catch (Exception e){
-                Log.d("nntp", e.getMessage());
             }
             return StaticTexts.SUCCESS;
         }

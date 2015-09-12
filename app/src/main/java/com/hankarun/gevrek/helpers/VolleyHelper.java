@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.libs.VolleySingleton;
 import com.hankarun.gevrek.libs.StaticTexts;
 
@@ -50,7 +51,6 @@ public class VolleyHelper{
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(error.getMessage(), "That didn't work!");
                     }
         }) {
             @Override

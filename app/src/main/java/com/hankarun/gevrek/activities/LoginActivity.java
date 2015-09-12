@@ -116,14 +116,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String password = mPassword.getText().toString();
 
         if (email.isEmpty()) {
-            mUsername.setError("Must Fill.");
+            mUsername.setError(getString(R.string.must_fill_error));
             valid = false;
         } else {
             mUsername.setError(null);
         }
 
         if (password.isEmpty() ) {
-            mPassword.setError("Must Fill.");
+            mPassword.setError(getString(R.string.must_fill_error));
             valid = false;
         } else {
             mPassword.setError(null);

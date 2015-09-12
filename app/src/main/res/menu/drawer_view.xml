@@ -4,22 +4,22 @@
         <item
             android:id="@+id/nav_first_fragment"
             android:icon="@mipmap/newsgroup"
-            android:title="News"
+            android:title="@string/news"
             android:checked="true"/>
         <item
             android:id="@+id/nav_second_fragment"
             android:icon="@mipmap/course"
-            android:title="Courses" />
+            android:title="@string/course" />
         <item
             android:id="@+id/nav_third_fragment"
             android:icon="@mipmap/email"
-            android:title="Email" />
+            android:title="@string/email" />
     </group>
 
     <group android:id="@+id/nav_footer">
         <item
             android:id="@+id/nav_settings"
             android:icon="@mipmap/settings"
-            android:title="Settings" />
+            android:title="@string/settings" />
     </group>
 </menu>

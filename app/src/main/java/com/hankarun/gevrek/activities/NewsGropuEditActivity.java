@@ -24,7 +24,7 @@ public class NewsGropuEditActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle("Select Groups");
+        getSupportActionBar().setTitle(R.string.select_gorups);
     }
 
     @Override

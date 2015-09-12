@@ -87,11 +87,11 @@ public class CourseDetailsFragment extends Fragment {
             Elements tds = doc.select("td[class=content]");
             Elements tds1 = tds.select("td");
 
-            String info = "<center>INFO</center>" +tds1.get(1).toString();
-            String staff = "<br><HR COLOR=\"blue\" size=\"10\"><center>Staff</center>" + tds1.get(2).toString();
-            String announcments = "<HR COLOR=\"blue\" size=\"10\"><center>Announcments</center>" + tds1.get(3).toString();
-            String notes = "<HR COLOR=\"blue\" size=\"10\"><center>Lecture Notes</center><br>" + tds1.get(4).toString();
-            String exams = "<HR COLOR=\"blue\" size=\"10\"><center>Exams</center>" + tds1.get(5).toString();
+            String info = "<center>"+getString(R.string.info)+"</center>" +tds1.get(1).toString();
+            String staff = "<br><HR COLOR=\"blue\" size=\"10\"><center>"+getString(R.string.staff)+"</center>" + tds1.get(2).toString();
+            String announcments = "<HR COLOR=\"blue\" size=\"10\"><center>"+getString(R.string.announcments)+"</center>" + tds1.get(3).toString();
+            String notes = "<HR COLOR=\"blue\" size=\"10\"><center>"+getString(R.string.lecture_notes)+"</center><br>" + tds1.get(4).toString();
+            String exams = "<HR COLOR=\"blue\" size=\"10\"><center>"+getString(R.string.exams)+"</center>" + tds1.get(5).toString();
 
 
             mWebview.loadData(info+staff+announcments+notes+exams,"text/html", "UTF-8");

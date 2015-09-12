@@ -25,7 +25,7 @@ public class CourseAddActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle("Select a Course");
+        getSupportActionBar().setTitle(R.string.select_a_course);
     }
 
 }

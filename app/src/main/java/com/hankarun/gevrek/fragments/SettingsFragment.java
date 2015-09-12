@@ -92,7 +92,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals("user_name"))
         {
-            Toast.makeText(getActivity().getApplicationContext(),"Kullanıcı adı değişti Haber ver,",Toast.LENGTH_SHORT).show();
             MainActivity main = (MainActivity) getActivity();
             main.checkUsername = true;
         }

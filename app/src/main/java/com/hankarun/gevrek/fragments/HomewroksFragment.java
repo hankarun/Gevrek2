@@ -118,7 +118,7 @@ public class HomewroksFragment extends Fragment {
             MyOtherAdapter adapter = new MyOtherAdapter(getActivity().getApplicationContext(),hmws);
             listView.setAdapter(adapter);
         }else{
-            Toast.makeText(getActivity().getApplicationContext(), "Network Problem", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }

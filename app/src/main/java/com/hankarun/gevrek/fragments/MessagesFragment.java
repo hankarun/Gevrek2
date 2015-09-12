@@ -169,7 +169,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             });
 
         }else{
-            Toast.makeText(getActivity().getApplicationContext(), "Netwrok Failure",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem,Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }
