@@ -23,13 +23,13 @@
     <string name="homeworks">Homeworks</string>
     <string name="course_details">Course Details</string>
     <string name="select_a_course">Select a Course</string>
-    <string name="must_fill_error">Must Fill.</string>
+    <string name="must_fill_error">Must Fil</string>
     <string name="select_gorups">Select Groups</string>
     <string name="you_reached_first_message">You reached first message.</string>
     <string name="you_reached_last_message">You have reached last message.</string>
     <string name="info">INFO</string>
     <string name="staff">Staff</string>
-    <string name="announcments">Announcments</string>
+    <string name="announcments">Announcements</string>
     <string name="lecture_notes">Lecture Notes</string>
     <string name="exams">Exams</string>
     <string name="oh_no">"Oh no! "</string>
