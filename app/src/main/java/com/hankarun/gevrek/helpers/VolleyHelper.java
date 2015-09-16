@@ -47,6 +47,8 @@ public class VolleyHelper{
         this.requestType = requestType;
 
 
+
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
                 new Response.ErrorListener() {
                     @Override
@@ -75,6 +77,10 @@ public class VolleyHelper{
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         //stringRequest.setShouldCache(false);
+        if(requestType == StaticTexts.READMESSAGES)
+            stringRequest.setShouldCache(true);
+        else
+            stringRequest.setShouldCache(false);
 
         queue.add(stringRequest);
     }

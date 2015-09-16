@@ -3,7 +3,7 @@
     <string-array name="network_names">
         <item>Wifi</item>
         <item>Wifi + 3G/LTE</item>
-        <item>Edge</item>
+        <item>Wifi + 3G/LTE + Edge</item>
     </string-array>
 
     <string-array name="network_types">

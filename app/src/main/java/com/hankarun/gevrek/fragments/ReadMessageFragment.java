@@ -27,6 +27,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.PostDialogHelper;
+import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.interfaces.LoginDialogReturn;
@@ -94,6 +95,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private String mParam1;
     private String mParam2;
 
+    private boolean showDelete = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +152,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_read_message, menu);
         this.menu = menu;
+        MenuItem item = menu.findItem(R.id.action_delete);
+        item.setVisible(showDelete);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -177,7 +182,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
                     readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD, "").toString()
             );
             nntpHelper.asyncResponse = this;
-            nntpHelper.deleteArticle(mid,s,"metu.ceng." + groupname,s);
+            nntpHelper.deleteArticle(mid, s, "metu.ceng." + groupname, s);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -190,9 +195,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
             avatarCheck(doc);
 
-
             reply = doc.select("a.np_button").attr("href");
-
 
             String tmp = doc.select("div.np_article_header").text();
             int sbb = tmp.indexOf("Subject:");
@@ -233,12 +236,17 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             body.setBackgroundColor(0x00000000);
 
             String username = s.substring(0,s.indexOf("@"));
-            /*MenuItem item = menu.findItem(R.id.action_delete);
-            if(username.equals(SharedPrefHelper.readPreferences(getActivity(),StaticTexts.SHARED_PREF_LOGINNAME,"").toString())){
-                item.setVisible(true);
+            if(username.equals(SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME, "").toString())){
+                showDelete = true;
+                if(menu != null){
+                    menu.findItem(R.id.action_delete).setVisible(showDelete);
+                }
             }else{
-                item.setVisible(false);
-            }*/
+                showDelete = false;
+                if(menu != null){
+                    menu.findItem(R.id.action_delete).setVisible(showDelete);
+                }
+            }
 
 
             mDialog.dismiss();
