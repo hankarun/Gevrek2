@@ -78,7 +78,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         if(validate()) {
-            mDialog = new WaitDialogHelper(getApplicationContext());
+            mDialog = new WaitDialogHelper(this);
             mDialog.show();
             NNTPHelper helper = new NNTPHelper(mUsername.getText().toString(), mPassword.getText().toString());
             helper.asyncResponse = this;

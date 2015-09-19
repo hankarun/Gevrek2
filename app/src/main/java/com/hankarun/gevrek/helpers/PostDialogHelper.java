@@ -45,19 +45,20 @@ public class PostDialogHelper extends Dialog implements
 
     public LoginDialogReturn answer;
 
-    public PostDialogHelper(Context context) {
+    public PostDialogHelper(Context context, final Activity a) {
         super(context);
         this.context = context;
         dialogHelper = new WaitDialogHelper(context);
-        dialogHelper.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if ((keyCode == KeyEvent.KEYCODE_BACK))
-                {
-                    //Back passed cancel everyting.
+        dialogHelper.setOnKeyListener(new Dialog.OnKeyListener() {
 
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode,
+                                 KeyEvent event) {
+                // TODO Auto-generated method stub
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    a.finish();
                 }
-                return false;
+                return true;
             }
         });
     }
@@ -129,24 +130,26 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, link, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                dialogHelper.dismiss();
-                show();
-                if (response != null) {
-                    Document doc = Jsoup.parse(response);
-                    Elements inputs = doc.select("input");
-                    for (Element s : inputs) {
-                        if (s.attr("name").equals("subject"))
-                            mSubject.setText(s.attr("value"));
-                        if (s.attr("name").equals("hide"))
-                            quote = s.attr("value");
-                        if (s.attr("name").equals("newsgroups"))
-                            newsgroups = s.attr("value");
-                        if (s.attr("name").equals("group"))
-                            newsgroup = s.attr("value");
-                        if (s.attr("name").equals("references"))
-                            references = s.attr("value");
-                        if(s.attr("name").equals("cc"))
-                            from = s.attr("value");
+                if(dialogHelper!=null) {
+                    dialogHelper.dismiss();
+                    show();
+                    if (response != null) {
+                        Document doc = Jsoup.parse(response);
+                        Elements inputs = doc.select("input");
+                        for (Element s : inputs) {
+                            if (s.attr("name").equals("subject"))
+                                mSubject.setText(s.attr("value"));
+                            if (s.attr("name").equals("hide"))
+                                quote = s.attr("value");
+                            if (s.attr("name").equals("newsgroups"))
+                                newsgroups = s.attr("value");
+                            if (s.attr("name").equals("group"))
+                                newsgroup = s.attr("value");
+                            if (s.attr("name").equals("references"))
+                                references = s.attr("value");
+                            if (s.attr("name").equals("cc"))
+                                from = s.attr("value");
+                        }
                     }
                 }
 

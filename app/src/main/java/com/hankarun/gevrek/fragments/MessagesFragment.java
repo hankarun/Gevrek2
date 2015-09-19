@@ -79,7 +79,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
         if (id == R.id.action_settings) {
             //Burada cevaplama dialogu gözükecek.
-            PostDialogHelper postDialogHelper = new PostDialogHelper(getActivity());
+            PostDialogHelper postDialogHelper = new PostDialogHelper(getActivity(),getActivity());
             postDialogHelper.answer = this;
             Bundle args = new Bundle();
             args.putInt("type", StaticTexts.REPLY_MESSAGE_GET);

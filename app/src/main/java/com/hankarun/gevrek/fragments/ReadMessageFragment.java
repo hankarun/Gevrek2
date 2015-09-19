@@ -2,6 +2,7 @@ package com.hankarun.gevrek.fragments;
 
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +31,7 @@ import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.PostDialogHelper;
 import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.VolleyHelper;
+import com.hankarun.gevrek.helpers.WaitDialogHelper;
 import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.interfaces.LoginDialogReturn;
 import com.hankarun.gevrek.libs.ConnectionChecker;
@@ -44,10 +47,6 @@ import java.util.ArrayList;
 
 import static com.hankarun.gevrek.helpers.SharedPrefHelper.readPreferences;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ReadMessageFragment extends Fragment implements LoginDialogReturn,AsyncResponse {
     private TextView from;
     private TextView date;
@@ -56,7 +55,6 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private VolleyHelper volleyHelper;
     private String reply;
     private PostDialogHelper postDialogHelper;
-    private Dialog mDialog;
 
     public int link;
     public ArrayList<CharSequence> link_list;
@@ -72,7 +70,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
 
     public void loadMessage(int _link){
-        setDialog();
+        waitDialog.show();
         mid = link_list.get(link).subSequence(link_list.get(link).toString().indexOf("#")+1,link_list.get(link).length()).toString();
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.READMESSAGES, HttpPages.group_page + link_list.get(_link), new Response.Listener<String>() {
@@ -105,24 +103,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             mParam2 = getArguments().getString("b");
         }
         setHasOptionsMenu(true);
-    }
 
-    private void setDialog(){
-        mDialog = new Dialog(getActivity());
-
-
-        mDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        mDialog.setContentView(R.layout.custom_dialog);
-        mDialog.setCancelable(false);
-
-        final Window window = mDialog.getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        //window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-        mDialog.show();
     }
 
 
@@ -143,7 +124,19 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         body = (WebView) rootView.findViewById(R.id.body_view);
         avatar = (NetworkImageView) rootView.findViewById(R.id.authoravatar);
 
+        waitDialog = new WaitDialogHelper(getActivity());
+        waitDialog.setOnKeyListener(new Dialog.OnKeyListener() {
 
+            @Override
+            public boolean onKey(DialogInterface arg0, int keyCode,
+                                 KeyEvent event) {
+                // TODO Auto-generated method stub
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    getActivity().finish();
+                }
+                return true;
+            }
+        });
         loadMessage(link);
         return rootView;
     }
@@ -163,7 +156,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
         if (id == R.id.action_settings) {
             //Burada cevaplama dialogu gözükecek.
-            postDialogHelper = new PostDialogHelper(getActivity());
+            postDialogHelper = new PostDialogHelper(getActivity(),getActivity());
             postDialogHelper.answer = this;
             Bundle args = new Bundle();
             args.putInt("type", StaticTexts.REPLY_MESSAGE_DIALOG);
@@ -174,7 +167,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
         if(id == R.id.action_delete){
             //Show waiting screen.
-            mDialog.show();
+            waitDialog.show();
 
             //NNTP ile delete yapılacak.
             NNTPHelper nntpHelper = new NNTPHelper(
@@ -249,7 +242,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             }
 
 
-            mDialog.dismiss();
+            waitDialog.dismiss();
         } else {
             Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
@@ -294,7 +287,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
     @Override
     public void onResponse(int feed) {
-        mDialog.dismiss();
+        waitDialog.dismiss();
         getActivity().setResult(1);
         getActivity().finish();
     }
