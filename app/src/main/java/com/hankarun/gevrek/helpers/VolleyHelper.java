@@ -1,7 +1,6 @@
 package com.hankarun.gevrek.helpers;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -10,26 +9,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.libs.VolleySingleton;
 import com.hankarun.gevrek.libs.StaticTexts;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.hankarun.gevrek.libs.StaticTexts.COURSES_REQUEST;
-import static com.hankarun.gevrek.libs.StaticTexts.COURSE_DETAIL_REQUEST;
-import static com.hankarun.gevrek.libs.StaticTexts.LOGIN_REQUEST;
-import static com.hankarun.gevrek.libs.StaticTexts.NEWSGROUP_EDIT_POST_REQUEST;
-import static com.hankarun.gevrek.libs.StaticTexts.NEWSGROUP_EDIT_REQUEST;
-import static com.hankarun.gevrek.libs.StaticTexts.NEWSGROUP_REQUEST;
-
 
 public class VolleyHelper{
     private RequestQueue queue;
     private int requestType = -1;
-    private Activity activity;
-    public Map<String, String> params;
+    private final Activity activity;
+    public final Map<String, String> params;
 
     public VolleyHelper(Activity _activity){
         activity = _activity;

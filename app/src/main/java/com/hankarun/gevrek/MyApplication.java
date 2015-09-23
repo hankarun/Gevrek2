@@ -21,7 +21,7 @@ public class MyApplication extends Application {
     public static Context getAppContext() {
         return mAppContext;
     }
-    public void setAppContext(Context mAppContext) {
+    private void setAppContext(Context mAppContext) {
         this.mAppContext = mAppContext;
     }
 }

@@ -2,11 +2,8 @@ package com.hankarun.gevrek.fragments;
 
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.libs.StaticTexts;
-import com.hankarun.gevrek.libs.VolleySingleton;
 import com.hankarun.gevrek.libs.HttpPages;
 
 import org.jsoup.Jsoup;
@@ -34,15 +24,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class HomewroksFragment extends Fragment {
-    public String lname;
-    ListView listView;
-    String course;
-    VolleyHelper volleyHelper;
-    ProgressBar progressBar;
+    private String lname;
+    private ListView listView;
+    private String course;
+    private VolleyHelper volleyHelper;
+    private ProgressBar progressBar;
 
     public void start(String _lname) {
         lname = _lname;
@@ -86,7 +74,7 @@ public class HomewroksFragment extends Fragment {
     }
 
 
-    public void onTaskComplete(String html) {
+    private void onTaskComplete(String html) {
         progressBar.setVisibility(View.GONE);
         if(!html.equals("")){
             Document doc = Jsoup.parse(html);

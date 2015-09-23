@@ -39,11 +39,11 @@ import org.jsoup.select.Elements;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse,LoginDialogReturn {
 
-    Toolbar toolbar;
-    NavigationView nvDrawer;
+    private Toolbar toolbar;
+    private NavigationView nvDrawer;
     private DrawerLayout mDrawer;
-    ActionBarDrawerToggle drawerToggle;
-    VolleyHelper volleyHelper;
+    private ActionBarDrawerToggle drawerToggle;
+    private VolleyHelper volleyHelper;
     public boolean checkUsername = false;
 
     @Override
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
         return drawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
     }
 
-    public void selectDrawerItem(MenuItem menuItem) {
+    private void selectDrawerItem(MenuItem menuItem) {
 
             Fragment fragment = null;
             String fragmentName = "";

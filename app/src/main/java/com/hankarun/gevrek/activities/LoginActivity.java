@@ -23,10 +23,10 @@ import com.hankarun.gevrek.libs.StaticTexts;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, AsyncResponse {
 
-    Button mLoginButton;
-    EditText mUsername;
-    EditText mPassword;
-    Dialog mDialog;
+    private Button mLoginButton;
+    private EditText mUsername;
+    private EditText mPassword;
+    private Dialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    public boolean validate() {
+    private boolean validate() {
         boolean valid = true;
 
         String email = mUsername.getText().toString();

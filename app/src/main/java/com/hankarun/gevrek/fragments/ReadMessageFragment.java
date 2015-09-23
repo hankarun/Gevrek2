@@ -56,10 +56,10 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private String reply;
     private PostDialogHelper postDialogHelper;
 
-    public int link;
-    public ArrayList<CharSequence> link_list;
-    public ArrayList<CharSequence> header_list;
-    public String mid;
+    private int link;
+    private ArrayList<CharSequence> link_list;
+    private ArrayList<CharSequence> header_list;
+    private String mid;
     private Menu menu;
     private String groupname;
     private Dialog waitDialog;
@@ -89,18 +89,14 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         }
     }
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private boolean showDelete = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString("a");
-            mParam2 = getArguments().getString("b");
+            String mParam1 = getArguments().getString("a");
+            String mParam2 = getArguments().getString("b");
         }
         setHasOptionsMenu(true);
 
@@ -182,7 +178,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
     private String s;
 
-    public void onTaskComplete(String html) {
+    private void onTaskComplete(String html) {
         if (!html.equals("")) {
             Document doc = Jsoup.parse(html);
 

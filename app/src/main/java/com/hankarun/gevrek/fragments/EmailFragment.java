@@ -27,7 +27,7 @@ public class EmailFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
 
-    public static EmailFragment newInstance(String param1, String param2) {
+    public static EmailFragment newInstance() {
         EmailFragment fragment = new EmailFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
@@ -49,13 +49,12 @@ public class EmailFragment extends Fragment {
     }
 
     private WebView webView;
-    private View view;
     private ProgressBar mProgressBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_email, container, false);
+        View view = inflater.inflate(R.layout.fragment_email, container, false);
         // Inflate the layout for this fragment
 
         webView = (WebView) view.findViewById(R.id.emailWebView);
@@ -111,11 +110,6 @@ public class EmailFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -123,7 +117,7 @@ public class EmailFragment extends Fragment {
     
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

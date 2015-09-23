@@ -48,7 +48,8 @@ public class MessagesActivity extends AppCompatActivity {
     }
 
 
-    float x1,x2;
+    private float x1;
+    private float x2;
     @Override
     public boolean onTouchEvent(MotionEvent touchevent) {
         switch (touchevent.getAction())

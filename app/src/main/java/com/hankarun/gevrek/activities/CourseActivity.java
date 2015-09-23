@@ -18,8 +18,8 @@ import com.hankarun.gevrek.fragments.HomewroksFragment;
 import com.hankarun.gevrek.R;
 
 public class CourseActivity extends AppCompatActivity {
-    String lname;
-    String html;
+    private String lname;
+    private String html;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,8 @@ public class CourseActivity extends AppCompatActivity {
         finish();
     }
 
-    float x1,x2;
+    private float x1;
+    private float x2;
     @Override
     public boolean onTouchEvent(MotionEvent touchevent) {
         switch (touchevent.getAction())
@@ -126,7 +127,7 @@ public class CourseActivity extends AppCompatActivity {
     }
 
     public class PagerAdapter extends FragmentStatePagerAdapter {
-        int mNumOfTabs;
+        final int mNumOfTabs;
 
         public PagerAdapter(FragmentManager fm, int NumOfTabs) {
             super(fm);

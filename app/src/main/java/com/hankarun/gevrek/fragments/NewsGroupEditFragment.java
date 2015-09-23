@@ -74,10 +74,10 @@ import java.util.Map;
  */
 public class NewsGroupEditFragment extends Fragment {
     private ListView listview;
-    GroupListAdapter adapter;
-    EditText filterEditText;
-    Button send;
-    Button cancel;
+    private GroupListAdapter adapter;
+    private EditText filterEditText;
+    private Button send;
+    private Button cancel;
     private Dialog mDialog;
 
     public class GroupName{
@@ -199,7 +199,7 @@ public class NewsGroupEditFragment extends Fragment {
 
     private VolleyHelper volleyHelper;
 
-    public void sendGroupsviaVolley(){
+    private void sendGroupsviaVolley(){
         volleyHelper = new VolleyHelper(getActivity());
 
         volleyHelper.params.put("submitOptions","save Options");
@@ -250,7 +250,7 @@ public class NewsGroupEditFragment extends Fragment {
 
     }
 
-    public void loadGroupsViaVolley(){
+    private void loadGroupsViaVolley(){
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.READMESSAGES, HttpPages.group_edit_page, new Response.Listener<String>() {
             @Override
@@ -269,9 +269,9 @@ public class NewsGroupEditFragment extends Fragment {
     }
 
     public class GroupListAdapter extends BaseAdapter implements Filterable {
-        Context context;
-        public ArrayList<GroupName> names;
-        private ArrayList<GroupName> filteredModelItemsArray;
+        final Context context;
+        public final ArrayList<GroupName> names;
+        private final ArrayList<GroupName> filteredModelItemsArray;
         CustomFilter filter;
 
         public GroupListAdapter(Context _context, ArrayList<GroupName> _names){

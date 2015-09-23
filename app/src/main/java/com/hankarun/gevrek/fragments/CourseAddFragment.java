@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.android.volley.Response;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.VolleyHelper;
-import com.hankarun.gevrek.libs.CourseItem;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 
@@ -24,8 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CourseAddFragment extends Fragment {
-    private VolleyHelper volleyHelper;
-    private Map<String,String> corses = new HashMap<String,String>();
+    private final Map<String,String> corses = new HashMap<String,String>();
 
     public CourseAddFragment() {
         // Required empty public constructor
@@ -45,7 +43,7 @@ public class CourseAddFragment extends Fragment {
     }
 
     private void loadCourseList(){
-        volleyHelper = new VolleyHelper(getActivity());
+        VolleyHelper volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.COURSELIST, HttpPages.courses_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {

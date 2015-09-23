@@ -1,21 +1,18 @@
 package com.hankarun.gevrek.helpers;
 
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.hankarun.gevrek.R;
 
 public class WaitDialogHelper extends Dialog{
-    Context context;
+    private final Context context;
     public WaitDialogHelper(Context context) {
         super(context);
         this.context = context;

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.support.v4.app.Fragment;
-import android.widget.Toast;
 
 import com.github.machinarius.preferencefragment.PreferenceFragment;
 import com.hankarun.gevrek.R;
@@ -28,11 +27,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         private static final String ARG_PARAM1 = "param1";
         private static final String ARG_PARAM2 = "param2";
 
-        // TODO: Rename and change types of parameters
-        private String mParam1;
-        private String mParam2;
-
-        private ListPreference mListPreference;
+    private ListPreference mListPreference;
 
         private OnFragmentInteractionListener mListener;
 
@@ -63,8 +58,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
         addPreferencesFromResource(R.xml.settings);
     }
@@ -75,11 +70,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -112,7 +102,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
 }

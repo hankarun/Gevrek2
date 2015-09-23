@@ -1,6 +1,5 @@
 package com.hankarun.gevrek.libs;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v4.util.LruCache;
 
@@ -12,8 +11,8 @@ import com.hankarun.gevrek.MyApplication;
 public class VolleySingleton {
 
     private static VolleySingleton instance;
-    private RequestQueue requestQueue;
-    private ImageLoader imageLoader;
+    private final RequestQueue requestQueue;
+    private final ImageLoader imageLoader;
 
     private VolleySingleton() {
         requestQueue = Volley.newRequestQueue(MyApplication.getAppContext());

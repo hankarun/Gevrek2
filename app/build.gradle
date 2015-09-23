@@ -13,10 +13,10 @@ android {
     buildToolsVersion "22.0.1"
     defaultConfig {
         applicationId "com.hankarun.gevrek"
-        minSdkVersion 21
+        minSdkVersion 16
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 32
+        versionName "4..50"
     }
     buildTypes {
         release {

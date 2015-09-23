@@ -43,14 +43,9 @@ public class NewsGroupFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private ExpandableListView listview;
-    private ExpandableListAdapter adapter;
     private List<Newsgroup> groups;
 
     private ProgressBar mProgressBar;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,8 +74,8 @@ public class NewsGroupFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
         setHasOptionsMenu(true);
     }
@@ -123,11 +118,6 @@ public class NewsGroupFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -135,10 +125,10 @@ public class NewsGroupFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
-    public void onTaskComplete(String html) {
+    private void onTaskComplete(String html) {
         if(!html.equals("")){
             groups = new ArrayList<Newsgroup>();
 
@@ -161,7 +151,7 @@ public class NewsGroupFragment extends Fragment {
                 groups.add(temp);
 
             }
-            adapter = new ExpandableListAdapter(getActivity(),groups);
+            ExpandableListAdapter adapter = new ExpandableListAdapter(getActivity(), groups);
             listview.setAdapter(adapter);
             for(int x = 0; x < groups.size(); x++)
                 listview.expandGroup(x);

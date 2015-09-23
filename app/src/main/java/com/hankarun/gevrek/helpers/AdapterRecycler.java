@@ -20,16 +20,16 @@ import java.util.ArrayList;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder> {
 
-    private ArrayList<CourseItem> mDataset;
-    private Context context;
+    private final ArrayList<CourseItem> mDataset;
+    private final Context context;
     private int lastPosition = -1;
-    private Activity activity;
+    private final Activity activity;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView txtHeader;
-        public TextView txtFooter;
-        public CardView card;
+        public final TextView txtHeader;
+        public final TextView txtFooter;
+        public final CardView card;
         //public RelativeLayout card;
 
         public ViewHolder(View v) {
@@ -91,8 +91,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
         // create a new view
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_row, parent, false);
         // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
-        return vh;
+        return new ViewHolder(v);
     }
 
     private void setAnimation(View viewToAnimate, int position)

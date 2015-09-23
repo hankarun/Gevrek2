@@ -1,12 +1,10 @@
 package com.hankarun.gevrek.helpers;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.libs.StaticTexts;
 
-import org.apache.commons.net.nntp.Article;
 import org.apache.commons.net.nntp.NNTPClient;
 import org.apache.commons.net.nntp.NewsgroupInfo;
 import org.apache.commons.net.nntp.SimpleNNTPHeader;
@@ -16,7 +14,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,8 +25,8 @@ import javax.net.ssl.X509TrustManager;
 
 public class NNTPHelper {
     public AsyncResponse asyncResponse;
-    String username;
-    String password;
+    private final String username;
+    private final String password;
 
     public NNTPHelper(String _name, String _pass){
         username = _name;
@@ -40,7 +37,7 @@ public class NNTPHelper {
         new NNTPConnect1().execute(articleNumber,sender,mGroup,mFrom);
     }
 
-    class NNTPConnect1 extends AsyncTask<String, Integer, Integer> {
+    private class NNTPConnect1 extends AsyncTask<String, Integer, Integer> {
 
         protected Integer doInBackground(String... urls) {
             NNTPClient client = new NNTPClient();
@@ -98,7 +95,7 @@ public class NNTPHelper {
         new NNTPConnect().execute();
     }
 
-    class NNTPConnect extends AsyncTask<String, Integer, Integer> {
+    private class NNTPConnect extends AsyncTask<String, Integer, Integer> {
 
         protected Integer doInBackground(String... urls) {
             NNTPClient client = new NNTPClient();

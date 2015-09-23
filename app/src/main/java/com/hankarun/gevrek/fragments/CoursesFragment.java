@@ -18,7 +18,6 @@ import android.widget.ProgressBar;
 import com.android.volley.Response;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.activities.CourseAddActivity;
-import com.hankarun.gevrek.activities.NewsGropuEditActivity;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.helpers.AdapterRecycler;
 import com.hankarun.gevrek.libs.CourseItem;
@@ -40,17 +39,11 @@ public class CoursesFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    ArrayList<CourseItem> lnames;
+    private ArrayList<CourseItem> lnames;
     private OnFragmentInteractionListener mListener;
     private ProgressBar mProgressBar;
     private VolleyHelper volleyHelper;
-    private RecyclerView mRecyclerView;
     private AdapterRecycler mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
 
     public static CoursesFragment newInstance(String param1, String param2) {
@@ -70,8 +63,8 @@ public class CoursesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
         //setHasOptionsMenu(true);
     }
@@ -83,12 +76,12 @@ public class CoursesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_courses, container, false);
 
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar2);
 
         mRecyclerView.setHasFixedSize(true);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         lnames = new ArrayList<>();
@@ -106,11 +99,6 @@ public class CoursesFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -125,7 +113,7 @@ public class CoursesFragment extends Fragment {
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        void onFragmentInteraction(Uri uri);
     }
 
     private void startTask() {
@@ -158,7 +146,7 @@ public class CoursesFragment extends Fragment {
     }
 
 
-    public void onTaskComplete(String html) {
+    private void onTaskComplete(String html) {
         if(!html.equals("")){
             Document doc = Jsoup.parse(html);
             doc.setBaseUri("https://cow.ceng.metu.edu.tr");

@@ -18,10 +18,10 @@ import java.util.ArrayList;
 
 public class ReadMessageActivity extends AppCompatActivity implements View.OnClickListener{
     private Toolbar toolbar;
-    public int link;
-    public ArrayList<CharSequence> link_list;
-    public ArrayList<CharSequence> header_list;
-    public String groupname;
+    private int link;
+    private ArrayList<CharSequence> link_list;
+    private ArrayList<CharSequence> header_list;
+    private String groupname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +40,10 @@ public class ReadMessageActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    float x1,x2;
-    float y1, y2;
+    private float x1;
+    private float x2;
+    private float y1;
+    private float y2;
 
     @Override
     public boolean onTouchEvent(MotionEvent touchevent) {

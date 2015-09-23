@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +43,6 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     private VolleyHelper volleyHelper;
     private ProgressBar mProgressBar;
     private ListView vies;
-    private List<MessageHeader> array;
     private String groupName;
     private String link;
     private String reply;
@@ -53,16 +51,12 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
     }
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString("a");
-            mParam2 = getArguments().getString("b");
+            String mParam1 = getArguments().getString("a");
+            String mParam2 = getArguments().getString("b");
         }
         setHasOptionsMenu(true);
     }
@@ -105,7 +99,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         this.groupName = grouName;
         this.link = link;
         loadPages();
-    };
+    }
 
     public void loadPages(){
         mProgressBar.setVisibility(View.VISIBLE);
@@ -119,9 +113,9 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         });
     }
 
-    public void onTaskComplete(String html){
+    private void onTaskComplete(String html){
         if(!html.equals("")){
-            array = new ArrayList<MessageHeader>();
+            List<MessageHeader> array = new ArrayList<MessageHeader>();
             Document doc = Jsoup.parse(html);
             Elements table = doc.select("table.np_thread_table").select("tr");
             reply = doc.select("a.np_button").get(0).attr("href");
@@ -234,7 +228,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 view = infalInflater.inflate(R.layout.message_item, null);
 
-                tmps.images = (LinearLayout) view.findViewById(R.id.imageLayout);;
+                tmps.images = (LinearLayout) view.findViewById(R.id.imageLayout);
 
                 view.setTag(tmps);
 

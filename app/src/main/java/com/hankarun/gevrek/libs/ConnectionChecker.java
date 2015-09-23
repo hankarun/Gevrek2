@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
 
 public class ConnectionChecker {
 
-    public static NetworkInfo getNetworkInfo(Context context){
+    private static NetworkInfo getNetworkInfo(Context context){
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo();
     }
@@ -37,7 +37,7 @@ public class ConnectionChecker {
     }
 
 
-    public static boolean isConnectionFast(int type, int subType){
+    private static boolean isConnectionFast(int type, int subType){
         if(type==ConnectivityManager.TYPE_WIFI){
             return true;
         }else if(type== ConnectivityManager.TYPE_MOBILE){

@@ -36,9 +36,9 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class CourseDetailsFragment extends Fragment {
-    public String lname;
-    String course;
-    WebView mWebview;
+    private String lname;
+    private String course;
+    private WebView mWebview;
     private VolleyHelper volleyHelper;
 
     public void start(String _lname) {
@@ -81,7 +81,7 @@ public class CourseDetailsFragment extends Fragment {
         }
     }
 
-    public void onTaskComplete(String html) {
+    private void onTaskComplete(String html) {
         if(!html.equals("")){
             Document doc = Jsoup.parse(html);
             Elements tds = doc.select("td[class=content]");

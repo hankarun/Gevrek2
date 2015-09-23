@@ -27,12 +27,9 @@ import org.jsoup.select.Elements;
 public class PostDialogHelper extends Dialog implements
         android.view.View.OnClickListener {
 
-    private Button mSendButton;
-    private Button mCancelButton;
     private EditText mSubject;
     private EditText mBody;
     private CheckBox mAddQuoteCheck;
-    private Context context;
     private VolleyHelper volleyHelper;
     private Activity activity;
     private String quote;
@@ -47,7 +44,7 @@ public class PostDialogHelper extends Dialog implements
 
     public PostDialogHelper(Context context, final Activity a) {
         super(context);
-        this.context = context;
+        Context context1 = context;
         dialogHelper = new WaitDialogHelper(context);
         dialogHelper.setOnKeyListener(new Dialog.OnKeyListener() {
 
@@ -71,10 +68,10 @@ public class PostDialogHelper extends Dialog implements
         setContentView(R.layout.reply_dialog);
 
 
-        mSendButton = (Button) findViewById(R.id.postButton);
+        Button mSendButton = (Button) findViewById(R.id.postButton);
         mSendButton.setOnClickListener(this);
 
-        mCancelButton = (Button) findViewById(R.id.cancelButton);
+        Button mCancelButton = (Button) findViewById(R.id.cancelButton);
         mCancelButton.setOnClickListener(this);
 
         //Add check box on click listener.
@@ -114,7 +111,7 @@ public class PostDialogHelper extends Dialog implements
         }
     }
 
-    WaitDialogHelper dialogHelper;
+    private final WaitDialogHelper dialogHelper;
 
     public void dialogShow(Bundle b, Activity activity){
         this.activity = activity;
