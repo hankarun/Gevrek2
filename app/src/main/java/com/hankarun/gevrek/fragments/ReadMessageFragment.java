@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -206,10 +207,11 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(title);
 
             String fpps = tmp.substring(fbb, tmp.length());
+            from.setText("");
             try {
                 from.setText(fpps.substring(6, fpps.indexOf("(") - 1)); //author
             } catch (Exception e) {
-                from.setText("");
+                Log.d("Exception", e.toString());
             }
 
             Elements es = doc.select("div.np_article_header");
