@@ -50,5 +50,6 @@
         android:textAlignment="gravity"
         android:textSize="10sp"
         android:focusable="false"
-        android:focusableInTouchMode="false" />
+        android:focusableInTouchMode="false"
+        android:textColor="@android:color/background_dark" />
 </LinearLayout>
