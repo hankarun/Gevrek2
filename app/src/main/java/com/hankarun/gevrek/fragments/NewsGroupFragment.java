@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -50,6 +51,7 @@ public class NewsGroupFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private VolleyHelper volleyHelper;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     // TODO: Rename and change types and number of parameters
@@ -63,7 +65,7 @@ public class NewsGroupFragment extends Fragment {
     }
 
     public void reload(){
-        startTask();
+        loadGroup();
     }
 
     public NewsGroupFragment() {
@@ -105,8 +107,25 @@ public class NewsGroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_group, container, false);
         listview = (ExpandableListView) view.findViewById(R.id.expandableListView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar3);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout1);
 
-        startTask();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reload();
+            }
+        });
+
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
+
+
+
+        loadGroup();
         return view;
     }
 
@@ -180,14 +199,15 @@ public class NewsGroupFragment extends Fragment {
         }
     }
 
-    private void startTask(){
-        mProgressBar.setVisibility(View.VISIBLE);
-
+    private void loadGroup(){
+        //mProgressBar.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.COURSES_REQUEST, HttpPages.left_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                mProgressBar.setVisibility(View.GONE);
+                //mProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
                 onTaskComplete(response);
             }
         });

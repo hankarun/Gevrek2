@@ -12,15 +12,20 @@
         android:indeterminateBehavior="repeat"
         android:indeterminateDuration="200"
         android:indeterminateOnly="false"
-        android:indeterminateTintMode="src_atop"
-        android:indeterminateTint="#ffff0000" />
-
-    <ExpandableListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/expandableListView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="10dp"
-        android:layout_below="@id/progressBar3"/>
+        android:visibility="gone"
+         />
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="10dp">
+        <ExpandableListView
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:id="@+id/expandableListView"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/progressBar3"/>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

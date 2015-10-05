@@ -52,7 +52,7 @@ public class MessagesActivity extends AppCompatActivity {
     private float x2;
     @Override
     public boolean onTouchEvent(MotionEvent touchevent) {
-        switch (touchevent.getAction())
+        /*switch (touchevent.getAction())
         {
             case MotionEvent.ACTION_DOWN:
             {
@@ -70,7 +70,7 @@ public class MessagesActivity extends AppCompatActivity {
 
                 break;
             }
-        }
+        }*/
 
         return super.onTouchEvent(touchevent);
     }
@@ -92,7 +92,8 @@ public class MessagesActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1) {
             //Refresh fragment
-            articleFrag.loadPages();
+            if(resultCode==RESULT_OK)
+                articleFrag.loadPages();
 
         }
     }

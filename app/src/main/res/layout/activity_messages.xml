@@ -11,6 +11,7 @@
     android:name="com.hankarun.gevrek.fragments.MessagesFragment"
     tools:layout="@layout/fragment_messages" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/toolbar1"/>
+    android:layout_below="@id/toolbar1"
+        android:layout_margin="3dp"/>
 
 </RelativeLayout>

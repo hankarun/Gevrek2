@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -46,6 +47,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     private String groupName;
     private String link;
     private String reply;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     public MessagesFragment(){
 
@@ -90,7 +92,20 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         View view = inflater.inflate(R.layout.fragment_messages, container, false);
         vies = (ListView) view.findViewById(R.id.mMessagesListView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar4);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(true);
+            }
+        });
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadPages();
+            }
+        });
 
         return view;
     }
@@ -102,12 +117,14 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     }
 
     public void loadPages(){
-        mProgressBar.setVisibility(View.VISIBLE);
+        //mProgressBar.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(true);
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.MESSAGE_LIST_REQUEST, HttpPages.group_page+link, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 mProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
                 onTaskComplete(response);
             }
         });
