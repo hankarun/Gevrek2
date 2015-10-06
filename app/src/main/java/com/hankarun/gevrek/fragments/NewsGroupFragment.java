@@ -206,7 +206,7 @@ public class NewsGroupFragment extends Fragment {
         volleyHelper.postStringRequest(StaticTexts.COURSES_REQUEST, HttpPages.left_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //mProgressBar.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
                 onTaskComplete(response);
             }

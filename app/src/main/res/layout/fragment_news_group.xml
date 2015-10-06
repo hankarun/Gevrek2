@@ -12,7 +12,8 @@
         android:indeterminateBehavior="repeat"
         android:indeterminateDuration="200"
         android:indeterminateOnly="false"
-        android:visibility="gone"
+        android:indeterminateTintMode="src_atop"
+        android:indeterminateTint="#ffff0000"
          />
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout1"

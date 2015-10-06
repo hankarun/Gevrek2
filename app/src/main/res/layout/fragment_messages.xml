@@ -14,7 +14,7 @@
         android:indeterminateOnly="false"
         android:indeterminateTintMode="src_atop"
         android:indeterminateTint="#ffff0000"
-        android:visibility="gone"/>
+        />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
