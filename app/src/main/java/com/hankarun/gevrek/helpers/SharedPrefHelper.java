@@ -15,6 +15,11 @@ public class SharedPrefHelper {
 
     public static String readPreferences(Context context, String key, String defaultValue){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-        return sp.getString(key, defaultValue);
+        try{
+            return sp.getString(key, defaultValue);
+        }catch (Exception e){
+            return "9";
+        }
+
     }
 }

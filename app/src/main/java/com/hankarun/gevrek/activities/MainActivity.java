@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
 
         if(SharedPrefHelper.readPreferences(this,StaticTexts.AVATAR_METHOD,"9").equals("9"))
             SharedPrefHelper.savePreferences(this,StaticTexts.AVATAR_METHOD,"0");
-
     }
 
     private void checkCreds(){
