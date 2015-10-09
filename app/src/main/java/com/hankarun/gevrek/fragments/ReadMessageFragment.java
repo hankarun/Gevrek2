@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import com.hankarun.gevrek.libs.ConnectionChecker;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 import com.hankarun.gevrek.libs.VolleySingleton;
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -52,7 +54,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private TextView from;
     private TextView date;
     private WebView body;
-    private NetworkImageView avatar;
+    private ImageView avatar;
     private VolleyHelper volleyHelper;
     private String reply;
     private PostDialogHelper postDialogHelper;
@@ -64,6 +66,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private Menu menu;
     private String groupname;
     private Dialog waitDialog;
+
+    Fragment self;
 
     public ReadMessageFragment() {
         // Required empty public constructor
@@ -101,6 +105,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         }
         setHasOptionsMenu(true);
 
+        self = this;
+
     }
 
 
@@ -119,7 +125,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         from = (TextView) rootView.findViewById(R.id.from_text);
         date = (TextView) rootView.findViewById(R.id.date_text);
         body = (WebView) rootView.findViewById(R.id.body_view);
-        avatar = (NetworkImageView) rootView.findViewById(R.id.authoravatar);
+        avatar = (ImageView) rootView.findViewById(R.id.authoravatar);
 
         waitDialog = new WaitDialogHelper(getActivity());
         waitDialog.setOnKeyListener(new Dialog.OnKeyListener() {
@@ -135,6 +141,20 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             }
         });
         loadMessage(link);
+
+        postDialogHelper = new PostDialogHelper(getActivity(),getActivity());
+        postDialogHelper.answer = this;
+
+        rootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putInt("type", StaticTexts.REPLY_MESSAGE_DIALOG);
+                args.putString("link", HttpPages.group_page + reply);
+                postDialogHelper.dialogShow(args, getActivity());
+            }
+        });
+
         return rootView;
     }
 
@@ -254,25 +274,33 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         ImageLoader mImageLoader = VolleySingleton.getInstance().getImageLoader();
         Elements heads = doc.select("tbody").select("td");
         //new GetAvatar().execute(heads.get(0).select("a").attr("href"));
-        avatar.setImageUrl(heads.get(0).select("a").attr("href"),mImageLoader);
-            switch (settings.getString(StaticTexts.AVATAR_METHOD,"0")){
+        //avatar.setImageUrl(heads.get(0).select("a").attr("href"),mImageLoader);
+        downloadImage(avatar, heads.get(0).select("a").attr("href"));
+        switch (settings.getString(StaticTexts.AVATAR_METHOD,"0")){
                 case "2":
                     if(ConnectionChecker.isConnected(getActivity().getApplicationContext())){
-                        avatar.setImageUrl(heads.get(0).select("a").attr("href"),mImageLoader);
+                        downloadImage(avatar, heads.get(0).select("a").attr("href"));
                     }
                     break;
                 case "1":
                     if(ConnectionChecker.isConnectedFast(getActivity().getApplicationContext())){
-                        avatar.setImageUrl(heads.get(0).select("a").attr("href"),mImageLoader);
+                        downloadImage(avatar, heads.get(0).select("a").attr("href"));
                     }
                     break;
-                case "0":
+            case "0":
                     if(ConnectionChecker.isConnectedWifi(getActivity().getApplicationContext())){
-                        avatar.setImageUrl(heads.get(0).select("a").attr("href"),mImageLoader);
+                        downloadImage(avatar,heads.get(0).select("a").attr("href"));
                     }
                     break;
             }
 
+    }
+
+    private void downloadImage(ImageView image, String url) {
+        Picasso.with(getActivity().getApplicationContext())
+                .load(url)
+                .placeholder(R.drawable.placeholder)
+                .into(image);
     }
 
     @Override

@@ -9,7 +9,4 @@
         app:showAsAction="always"/>
         <!-- android:visible="false" -->
 
-    <item android:id="@+id/action_settings" android:icon="@drawable/ic_reply_white_48dp"
-        android:title="@string/add"
-        app:showAsAction="always" />
 </menu>

@@ -15,7 +15,7 @@ android {
         applicationId "com.hankarun.gevrek"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 35
+        versionCode 36
         versionName "4..51"
     }
     buildTypes {
@@ -37,4 +37,6 @@ dependencies {
     compile 'commons-net:commons-net:2.0'
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.github.machinarius:preferencefragment:0.1.1'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
 }
