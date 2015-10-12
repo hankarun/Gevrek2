@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -122,6 +123,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             header_list = bundle.getCharSequenceArrayList("headers");
             groupname = bundle.getString("groupname");
         }
+
         from = (TextView) rootView.findViewById(R.id.from_text);
         date = (TextView) rootView.findViewById(R.id.date_text);
         body = (WebView) rootView.findViewById(R.id.body_view);
