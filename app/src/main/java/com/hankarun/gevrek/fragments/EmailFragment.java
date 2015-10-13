@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.SharedPrefHelper;
+import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 
 public class EmailFragment extends Fragment {
@@ -79,12 +81,14 @@ public class EmailFragment extends Fragment {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
-                webView.loadUrl("javascript: {document.getElementsByName('_user')[0].value ='" +
-                        SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME,"") + "';" +
-                      "document.getElementsByName('_pass')[0].value = '" +
-                        SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD,"")+ "';" +
-                      "var frms = document.getElementsByName('form');" +
-                       "frms[0].submit();};");
+                if(url.equals(HttpPages.EmailUrl)) {
+                    webView.loadUrl("javascript: {document.getElementsByName('_user')[0].value ='" +
+                            SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME, "") + "';" +
+                            "document.getElementsByName('_pass')[0].value = '" +
+                            SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD, "") + "';" +
+                            "var frms = document.getElementsByName('form');" +
+                            "frms[0].submit();};");
+                }
             }
             public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
                 Toast.makeText(activity, activity.getString(R.string.oh_no) + description, Toast.LENGTH_SHORT).show();
@@ -95,7 +99,7 @@ public class EmailFragment extends Fragment {
         webView.getSettings().setJavaScriptEnabled(true);
 
 
-        webView.loadUrl("https://webmail.ceng.metu.edu.tr/roundcube/");
+        webView.loadUrl(HttpPages.EmailUrl);
 
 
 

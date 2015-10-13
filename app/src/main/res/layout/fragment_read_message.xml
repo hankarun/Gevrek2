@@ -1,6 +1,7 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,6 +9,7 @@
     android:background="#ffffff">
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout

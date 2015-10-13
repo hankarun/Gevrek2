@@ -9,4 +9,5 @@ public class HttpPages {
     public static final String homeworks_page = cow_page + "Student/homeworks.php";
     public static final String post_page = group_page + "post.php";
     public static final String group_edit_page = group_page + "setOptions.php";
+    public static final String EmailUrl = "https://webmail.ceng.metu.edu.tr/roundcube/";
 }

@@ -8,7 +8,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -67,6 +70,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private Menu menu;
     private String groupname;
     private Dialog waitDialog;
+    private NestedScrollView mNestedScrollView;
+    private CoordinatorLayout mCoordinatorLayout;
 
     Fragment self;
 
@@ -77,6 +82,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
     public void loadMessage(int _link){
         waitDialog.show();
+
         mid = link_list.get(link).subSequence(link_list.get(link).toString().indexOf("#")+1,link_list.get(link).length()).toString();
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.READMESSAGES, HttpPages.group_page + link_list.get(_link), new Response.Listener<String>() {
@@ -128,6 +134,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
         date = (TextView) rootView.findViewById(R.id.date_text);
         body = (WebView) rootView.findViewById(R.id.body_view);
         avatar = (ImageView) rootView.findViewById(R.id.authoravatar);
+        mNestedScrollView = (NestedScrollView) rootView.findViewById(R.id.nested_scroll_view_message);
+        mCoordinatorLayout = (CoordinatorLayout) rootView.findViewById(R.id.coordinator_layout);
 
         waitDialog = new WaitDialogHelper(getActivity());
         waitDialog.setOnKeyListener(new Dialog.OnKeyListener() {
@@ -142,6 +150,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
                 return true;
             }
         });
+
         loadMessage(link);
 
         postDialogHelper = new PostDialogHelper(getActivity(),getActivity());
@@ -156,6 +165,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
                 postDialogHelper.dialogShow(args, getActivity());
             }
         });
+
+
 
         return rootView;
     }
