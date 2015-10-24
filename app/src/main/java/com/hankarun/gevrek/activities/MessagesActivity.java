@@ -93,7 +93,7 @@ public class MessagesActivity extends AppCompatActivity {
         if(requestCode==1) {
             //Refresh fragment
             if(resultCode==RESULT_OK)
-                articleFrag.loadPages();
+                articleFrag.loadPages(true);
 
         }
     }
