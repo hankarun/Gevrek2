@@ -1,0 +1,108 @@
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MessageRead$PlaceholderFragment"
+    android:background="#ffffff">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nested_scroll_view_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lm1"
+                android:visibility="visible"
+                android:padding="5dp"
+                android:background="@color/primaryColor">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="50dp"
+                    android:id="@+id/authoravatar"
+                    android:layout_margin="10dp"
+                    android:maxHeight="50dp"
+                    android:maxWidth="50dp"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
+                    />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:layout_gravity="center">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/from"
+                            android:id="@+id/textView3"
+                            android:textColor="@color/abc_primary_text_material_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/from_text"
+                            android:layout_marginLeft="3dp"
+                            android:textColor="@color/abc_primary_text_material_dark" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_margin="2dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/time"
+                            android:id="@+id/textView5"
+                            android:textColor="@color/abc_primary_text_material_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/date_text"
+                            android:layout_marginLeft="3dp"
+                            android:textColor="@color/abc_primary_text_material_dark" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <WebView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/body_view"
+                android:layout_marginTop="35dp"/>
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/share_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_reply_white_48dp"
+        android:layout_margin="3dp"
+        app:elevation="3dp"
+        app:layout_anchor="@+id/lm1"
+        app:layout_anchorGravity="bottom|right|end"/>
+
+</android.support.design.widget.CoordinatorLayout>

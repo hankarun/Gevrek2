@@ -1,5 +1,6 @@
 package com.hankarun.gevrek.fragments;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -138,11 +139,19 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
                 if (loading) {
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                        loading = false;
-
                         if(currentPage<totalPage){
                             link = stringMap.get(currentPage+1);
-                            loadPages(false);
+                            Snackbar.make(rootView, "Load next page?", Snackbar.LENGTH_LONG)
+                                    .setAction("Load", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            loading = false;
+                                            loadPages(false);
+                                        }
+                                    })
+                                    .setActionTextColor(getResources().getColor(android.R.color.holo_green_light))
+                                    .show();
+
                         }
                     }
                 }
@@ -181,15 +190,6 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
                 loading = true;
             }
         });
-        Snackbar.make(rootView, "New messages loading...", Snackbar.LENGTH_SHORT)
-                .setAction("CLOSE", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    }
-                })
-                .setActionTextColor(getResources().getColor(android.R.color.holo_red_light))
-                .show();
     }
 
     private void onTaskComplete(String html, boolean clear){
@@ -434,6 +434,12 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         }
 
         @Override
+        public void onViewRecycled(ViewHolder personViewHolder) {
+            super.onViewRecycled(personViewHolder);
+            personViewHolder.lines.removeAllViews();
+        }
+
+        @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             final MessageHeader cHeader = mDataset.get(position);
             holder.txtDate.setText(Html.fromHtml("<font color=\"" + cHeader.color + "\">" + cHeader.date + "</font>"));
@@ -446,13 +452,9 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             else
                 reads = "<font color=\"#26598F\">"+header + cHeader.header+"</font>";
 
+            addImages(holder.lines, cHeader.getImg());
 
-            String firstPart = "";
-            for (int x = 1; x < cHeader.getImg().length(); x++) {
-                firstPart = firstPart + "   ";
-            }
-
-            holder.txtBody.setText(Html.fromHtml(firstPart+reads));
+            holder.txtBody.setText(Html.fromHtml(reads));
 
             holder.total.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -468,9 +470,9 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
                     Intent intent = new Intent(getActivity(), ReadMessageActivity.class);
 
-                    intent.putCharSequenceArrayListExtra("list",tmp);
-                    intent.putCharSequenceArrayListExtra("headers",tmp1);
-                    intent.putExtra("groupname",groupName);
+                    intent.putCharSequenceArrayListExtra("list", tmp);
+                    intent.putCharSequenceArrayListExtra("headers", tmp1);
+                    intent.putExtra("groupname", groupName);
 
                     intent.putExtra("message", mDataset.indexOf(cHeader));
                     getActivity().startActivityForResult(intent, 1);
@@ -479,8 +481,43 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
 
             holder.txtAuthor.setText(cHeader.author);
+        }
 
+        private LinearLayout addImages(LinearLayout layout, String imgs){
+            layout.removeAllViews();
 
+            for(int x=0; x<imgs.length(); x++){
+                ImageView tmp = new ImageView(getContext());
+                if(imgs.charAt(x) == ' ')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.b));
+                else
+                if(imgs.charAt(x) == '*')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.s));
+                else
+                if(imgs.charAt(x) == 'o')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.n));
+                else
+                if(imgs.charAt(x) == '+')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.tt));
+                else
+                if(imgs.charAt(x) == '-')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.g));
+                else
+                if(imgs.charAt(x) == '|')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.l));
+                else
+                if(imgs.charAt(x) == '`')
+                    tmp.setImageDrawable(getResources().getDrawable(R.mipmap.k));
+
+                Toolbar.LayoutParams params = new Toolbar.LayoutParams(40, ViewGroup.LayoutParams.MATCH_PARENT);
+                params.height = ViewGroup.LayoutParams.MATCH_PARENT;
+
+                tmp.setLayoutParams(params);
+                tmp.setFocusable(false);
+                tmp.setFocusableInTouchMode(false);
+                layout.addView(tmp, x);
+            }
+            return layout;
         }
 
         @Override
