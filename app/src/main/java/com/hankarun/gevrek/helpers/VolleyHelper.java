@@ -63,8 +63,8 @@ public class VolleyHelper{
         };
         stringRequest.setTag(requestType);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                12000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                1000,
+                3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         //stringRequest.setShouldCache(false);

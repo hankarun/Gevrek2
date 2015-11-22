@@ -58,4 +58,6 @@
     <string name="bandwidth_control">Bandwidth Control</string>
     <string name="avatar_download_options">Avatar Download Options</string>
     <string name="download_when">Download when...</string>
+    <string name="next_page">Load next page?</string>
+    <string name="load">Load</string>
 </resources>

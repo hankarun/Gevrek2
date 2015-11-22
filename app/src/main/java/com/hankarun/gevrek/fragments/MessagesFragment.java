@@ -141,8 +141,8 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         if(currentPage<totalPage){
                             link = stringMap.get(currentPage+1);
-                            Snackbar.make(rootView, "Load next page?", Snackbar.LENGTH_LONG)
-                                    .setAction("Load", new View.OnClickListener() {
+                            Snackbar.make(rootView, R.string.next_page, Snackbar.LENGTH_SHORT)
+                                    .setAction(R.string.load, new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             loading = false;
