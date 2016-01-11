@@ -1,6 +1,5 @@
 package com.hankarun.gevrek.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -38,8 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsGroupFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -54,7 +51,6 @@ public class NewsGroupFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
-    // TODO: Rename and change types and number of parameters
     public static NewsGroupFragment newInstance(String param1, String param2) {
         NewsGroupFragment fragment = new NewsGroupFragment();
         Bundle args = new Bundle();
@@ -122,14 +118,10 @@ public class NewsGroupFragment extends Fragment {
                 mSwipeRefreshLayout.setRefreshing(true);
             }
         });
-
-
-
         loadGroup();
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -143,13 +135,12 @@ public class NewsGroupFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 
     private void onTaskComplete(String html) {
         if(!html.equals("")){
-            groups = new ArrayList<Newsgroup>();
+            groups = new ArrayList<>();
 
             Document doc = Jsoup.parse(html);
             Elements groupblock = doc.select(".np_index_groupblock:not(:has(div))");
@@ -168,7 +159,6 @@ public class NewsGroupFragment extends Fragment {
                     temp.addUrl(link.text(), link.attr("href"),smalls.get(b++).text(),color);
                 }
                 groups.add(temp);
-
             }
             ExpandableListAdapter adapter = new ExpandableListAdapter(getActivity(), groups);
             listview.setAdapter(adapter);
