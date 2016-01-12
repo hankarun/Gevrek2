@@ -1,11 +1,17 @@
 package com.hankarun.gevrek.fragments;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -20,23 +26,21 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
+import com.hankarun.gevrek.NewsContentProvider;
+import com.hankarun.gevrek.NewsGroupIntentService;
+import com.hankarun.gevrek.Newsgroup;
 import com.hankarun.gevrek.R;
+import com.hankarun.gevrek.Url;
 import com.hankarun.gevrek.activities.MessagesActivity;
 import com.hankarun.gevrek.activities.NewsGropuEditActivity;
+import com.hankarun.gevrek.database.NewsGroupTable;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.libs.HttpPages;
-import com.hankarun.gevrek.libs.StaticTexts;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsGroupFragment extends Fragment {
+public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -50,6 +54,18 @@ public class NewsGroupFragment extends Fragment {
     private VolleyHelper volleyHelper;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                int resultCode = bundle.getInt("result");
+                mProgressBar.setVisibility(View.GONE);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }
+    };
+
 
     public static NewsGroupFragment newInstance(String param1, String param2) {
         NewsGroupFragment fragment = new NewsGroupFragment();
@@ -60,7 +76,7 @@ public class NewsGroupFragment extends Fragment {
         return fragment;
     }
 
-    public void reload(){
+    public void reload() {
         loadGroup();
     }
 
@@ -76,6 +92,7 @@ public class NewsGroupFragment extends Fragment {
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
         setHasOptionsMenu(true);
+        getActivity().registerReceiver(receiver, new IntentFilter("fetch"));
     }
 
     @Override
@@ -103,6 +120,7 @@ public class NewsGroupFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news_group, container, false);
         listview = (ExpandableListView) view.findViewById(R.id.expandableListView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar3);
+        mProgressBar.setVisibility(View.GONE);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout1);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -129,122 +147,98 @@ public class NewsGroupFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(receiver, new IntentFilter("fetch"));
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        //String type = args.getString("type");
+        switch (id) {
+            case 0:
+                return new CursorLoader(getActivity(),
+                        NewsContentProvider.CONTENT_URI,
+                        NewsGroupTable.projection,
+                        null,
+                        null,
+                        null
+                );
+        }
+        return null;
     }
 
-    private void onTaskComplete(String html) {
-        if(!html.equals("")){
+        @Override
+        public void onLoadFinished (Loader < Cursor > loader, Cursor data){
             groups = new ArrayList<>();
-
-            Document doc = Jsoup.parse(html);
-            Elements groupblock = doc.select(".np_index_groupblock:not(:has(div))");
-            Elements grouphead = doc.select("div.np_index_grouphead");
-            int a = 0;
-            for (Element div : groupblock) {
-                Newsgroup temp = new Newsgroup();
-                temp.name = grouphead.get(a++).text();
-                Elements rews = div.select("a");
-                Elements smalls = div.select("small");
-                int b = 0;
-                for (Element link : rews){
-                    String color = "";
-                    if(smalls.get(b).select("font").size()>0)
-                        color = smalls.get(b).select("font").attr("color");
-                    temp.addUrl(link.text(), link.attr("href"),smalls.get(b++).text(),color);
+            String tempName = "";
+            Newsgroup n = new Newsgroup();
+            if (data != null && data.moveToFirst()) {
+                while (data.moveToNext()) {
+                    Url tempUrl = Url.fromCursor(data);
+                    if(!tempName.equals(tempUrl.group)){
+                        tempName = tempUrl.group;
+                        n = new Newsgroup();
+                        n.name = tempUrl.group;
+                        groups.add(n);
+                    }
+                    n.addUrl(tempUrl);
                 }
-                groups.add(temp);
             }
+
             ExpandableListAdapter adapter = new ExpandableListAdapter(getActivity(), groups);
             listview.setAdapter(adapter);
-            for(int x = 0; x < groups.size(); x++)
+            for (int x = 0; x < groups.size(); x++)
                 listview.expandGroup(x);
             listview.setGroupIndicator(null);
-            listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
-            {
+            listview.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                 @Override
-                public boolean onChildClick(ExpandableListView parent, View v, int group_position, int child_position, long id)
-                {
-                    if(!groups.get(group_position).getUrl(child_position).count.equals("(0)")) {
+                public boolean onChildClick(ExpandableListView parent, View v, int group_position, int child_position, long id) {
+                    if (!groups.get(group_position).getUrl(child_position).count.equals("(0)")) {
                         Intent intent = new Intent(getActivity(), MessagesActivity.class);
                         intent.putExtra("name", groups.get(group_position).getUrl(child_position).name);
                         intent.putExtra("link", groups.get(group_position).getUrl(child_position).url);
                         startActivity(intent);
                         getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-                    }else{
-                        Toast.makeText(getActivity().getApplicationContext(), "Group '" +groups.get(group_position).getUrl(child_position).name + "' has no message to show.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), "Group '" + groups.get(group_position).getUrl(child_position).name + "' has no message to show.", Toast.LENGTH_SHORT).show();
                     }
                     return false;
                 }
             });
             adapter.notifyDataSetChanged();
-        }else{
-            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
-            getActivity().finish();
-        }
-    }
 
-    private void loadGroup(){
-        //mProgressBar.setVisibility(View.VISIBLE);
-        mSwipeRefreshLayout.setRefreshing(true);
-        volleyHelper = new VolleyHelper(getActivity());
-        volleyHelper.postStringRequest(StaticTexts.COURSES_REQUEST, HttpPages.left_page, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                mProgressBar.setVisibility(View.GONE);
-                mSwipeRefreshLayout.setRefreshing(false);
-                onTaskComplete(response);
-            }
-        });
+        }
+
+        @Override
+        public void onLoaderReset (Loader < Cursor > loader) {
+
+        }
+
+        public interface OnFragmentInteractionListener {
+            void onFragmentInteraction(Uri uri);
+        }
+
+    private void loadGroup() {
+        Intent mServiceIntent = new Intent(getActivity(), NewsGroupIntentService.class);
+        mServiceIntent.setData(Uri.parse(HttpPages.left_page));
+        getActivity().startService(mServiceIntent);
+
+        getLoaderManager().initLoader(0, null, this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if(volleyHelper != null)
-            volleyHelper.cancelRequest();
+        getActivity().unregisterReceiver(receiver);
     }
 
-    public class Newsgroup {
-        public String name;
-        public final List<Urls> groups = new ArrayList<Urls>();
-
-        @Override
-        public String toString(){
-            return name;
-        }
-
-        public int getSize() { return groups.size();}
-
-        public void addUrl(String _name, String _url, String _count, String _color){
-            groups.add(new Urls(_name,_url, _count, _color));
-        }
-
-        public Urls getUrl(int i) { return groups.get(i);}
-
-
-    }
-    public class Urls {
-        public final String name;
-        public final String url;
-        public final String count;
-        public final String color;
-
-        @Override
-        public String toString(){return name + " <font color=\""+ color +"\">" +count + "</font>";}
-
-        Urls(String _name, String _url, String _count, String _color){
-            name = _name;
-            count = _count;
-            url = _url;
-            color = _color;
-        }
-    }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -335,5 +329,4 @@ public class NewsGroupFragment extends Fragment {
         }
 
     }
-
 }

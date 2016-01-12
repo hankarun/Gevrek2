@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.setDrawerListener(drawerToggle);
         TextView name = (TextView) findViewById(R.id.drawerHeaderUserName);
+        if(name!=null)
         name.setText(SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.USER_REAL_NAME, ""));
         checkCreds();
 
