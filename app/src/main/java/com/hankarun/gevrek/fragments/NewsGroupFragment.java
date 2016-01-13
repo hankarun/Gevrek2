@@ -228,6 +228,7 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
     private void loadGroup() {
         Intent mServiceIntent = new Intent(getActivity(), NewsGroupIntentService.class);
         mServiceIntent.setData(Uri.parse(HttpPages.left_page));
+        mServiceIntent.putExtra("type","0");
         getActivity().startService(mServiceIntent);
 
         getLoaderManager().initLoader(0, null, this);

@@ -10,37 +10,42 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.hankarun.gevrek.database.CourseTable;
 import com.hankarun.gevrek.database.NewsGroupTable;
-import com.hankarun.gevrek.database.NewsgroupDatabaseHelper;
+import com.hankarun.gevrek.database.DatabaseHelper;
 
 
 public class NewsContentProvider extends ContentProvider {
 
-    private NewsgroupDatabaseHelper database;
+    private DatabaseHelper database;
 
     private static final int NEWSGROUPS = 10;
     private static final int NEWSGROUPID = 20;
+    private static final int COURSES = 30;
+    private static final int COURSEID = 40;
 
     private static final String AUTHORITY = "com.hankarun.gevrek";
 
     private static final String BASE_PATH = "newsgroups";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
+    private static final String BASE_PATH1 = "courses";
 
-    public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-            + "/" + BASE_PATH;
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH);
+    public static final Uri CONTENT_URI1 = Uri.parse("content://" + AUTHORITY + "/" + BASE_PATH1);
+
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, NEWSGROUPS);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", NEWSGROUPID);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH1, COURSES);
+        sURIMatcher.addURI(AUTHORITY, BASE_PATH1 + "/#", COURSEID);
     }
 
     @Override
     public boolean onCreate() {
-        database = new NewsgroupDatabaseHelper(getContext());
+        database = new DatabaseHelper(getContext());
         return false;
     }
 
@@ -50,16 +55,23 @@ public class NewsContentProvider extends ContentProvider {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
         // Set the table
-        queryBuilder.setTables(NewsGroupTable.TABLE_NEWSGRUOP);
 
         int uriType = sURIMatcher.match(uri);
         switch (uriType) {
             case NEWSGROUPS:
+                queryBuilder.setTables(NewsGroupTable.TABLE_NEWSGRUOP);
                 break;
             case NEWSGROUPID:
                 // adding the ID to the original query
+                queryBuilder.setTables(NewsGroupTable.TABLE_NEWSGRUOP);
                 queryBuilder.appendWhere(NewsGroupTable.KEY_ID + "="
                         + uri.getLastPathSegment());
+                break;
+            case COURSES:
+                queryBuilder.setTables(CourseTable.TABLE_COURSES);
+                break;
+            case COURSEID:
+                queryBuilder.setTables(CourseTable.TABLE_COURSES);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
@@ -85,21 +97,36 @@ public class NewsContentProvider extends ContentProvider {
         int uriType = sURIMatcher.match(uri);
         SQLiteDatabase sqlDB = database.getWritableDatabase();
         long id = 0;
+        String base = "";
         switch (uriType) {
             case NEWSGROUPS:
                 id = sqlDB.insert(NewsGroupTable.TABLE_NEWSGRUOP, null, values);
+                base = BASE_PATH;
+                break;
+            case COURSES:
+                id = sqlDB.insert(CourseTable.TABLE_COURSES, null, values);
+                base = BASE_PATH1;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
         getContext().getContentResolver().notifyChange(uri, null);
-        return Uri.parse(BASE_PATH + "/" + id);
+        return Uri.parse(base + "/" + id);
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();
-        sqLiteDatabase.delete(NewsGroupTable.TABLE_NEWSGRUOP,null,null);
+        int uriType = sURIMatcher.match(uri);
+        SQLiteDatabase sqLiteDatabase = database.getWritableDatabase();;
+        switch (uriType){
+            case NEWSGROUPS:
+                sqLiteDatabase.delete(NewsGroupTable.TABLE_NEWSGRUOP, null, null);
+                break;
+            case COURSES:
+                sqLiteDatabase.delete(CourseTable.TABLE_COURSES, null, null);
+                break;
+        }
+
         return 0;
     }
 

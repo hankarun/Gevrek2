@@ -1,8 +1,10 @@
 package com.hankarun.gevrek.activities;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,11 +15,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.hankarun.gevrek.NewsGroupIntentService;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.NNTPHelper;
 import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.WaitDialogHelper;
 import com.hankarun.gevrek.interfaces.AsyncResponse;
+import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 
 
@@ -97,7 +101,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case StaticTexts.SUCCESS:
                 //Bilgileri kaydedecek.
                 saveCreds(mUsername.getText().toString(), mPassword.getText().toString());
-
+                Intent mServiceIntent = new Intent(this, NewsGroupIntentService.class);
+                mServiceIntent.setData(Uri.parse(HttpPages.courses_page));
+                mServiceIntent.putExtra("type","0");
+                startService(mServiceIntent);
                 finish();
                 //Kaybolacak
                 mDialog.dismiss();

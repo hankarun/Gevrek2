@@ -1,12 +1,20 @@
 package com.hankarun.gevrek.fragments;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +24,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.android.volley.Response;
+import com.hankarun.gevrek.NewsContentProvider;
+import com.hankarun.gevrek.NewsGroupIntentService;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.activities.CourseAddActivity;
+import com.hankarun.gevrek.database.CourseTable;
+import com.hankarun.gevrek.database.NewsGroupTable;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.helpers.AdapterRecycler;
 import com.hankarun.gevrek.libs.CourseItem;
@@ -33,7 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CoursesFragment extends Fragment {
+public class CoursesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,6 +57,16 @@ public class CoursesFragment extends Fragment {
     private VolleyHelper volleyHelper;
     private AdapterRecycler mAdapter;
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                int resultCode = bundle.getInt("result");
+                mProgressBar.setVisibility(View.GONE);
+            }
+        }
+    };
 
     public static CoursesFragment newInstance(String param1, String param2) {
         CoursesFragment fragment = new CoursesFragment();
@@ -67,6 +89,8 @@ public class CoursesFragment extends Fragment {
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
         //setHasOptionsMenu(true);
+        getActivity().registerReceiver(receiver, new IntentFilter("courses"));
+
     }
 
     @Override
@@ -85,7 +109,7 @@ public class CoursesFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         lnames = new ArrayList<>();
-        mAdapter = new AdapterRecycler(lnames, getActivity().getApplicationContext(),getActivity());
+        mAdapter = new AdapterRecycler(lnames, getActivity().getApplicationContext(), getActivity());
         mRecyclerView.setAdapter(mAdapter);
         startTask();
 
@@ -107,8 +131,43 @@ public class CoursesFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if(volleyHelper != null)
-            volleyHelper.cancelRequest();
+        //if (volleyHelper != null)
+        //    volleyHelper.cancelRequest();
+        getActivity().unregisterReceiver(receiver);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().registerReceiver(receiver, new IntentFilter("courses"));
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(),
+                NewsContentProvider.CONTENT_URI1,
+                CourseTable.projection,
+                null,
+                null,
+                null
+        );
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.clear();
+        if (data != null && data.moveToFirst()) {
+            do {
+                mAdapter.add(mAdapter.getItemCount(), CourseItem.fromCursor(data));
+            } while ((data.moveToNext()));
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
     }
 
     public interface OnFragmentInteractionListener {
@@ -117,6 +176,13 @@ public class CoursesFragment extends Fragment {
     }
 
     private void startTask() {
+        /*Intent mServiceIntent = new Intent(getActivity(), NewsGroupIntentService.class);
+        mServiceIntent.setData(Uri.parse(HttpPages.courses_page));
+        mServiceIntent.putExtra("type","1");
+        getActivity().startService(mServiceIntent);*/
+
+        getLoaderManager().initLoader(0, null, this);
+        /*
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.MESSAGE_LIST_REQUEST, HttpPages.courses_page, new Response.Listener<String>() {
             @Override
@@ -124,7 +190,7 @@ public class CoursesFragment extends Fragment {
                 mProgressBar.setVisibility(View.GONE);
                 onTaskComplete(response);
             }
-        });
+        });*/
     }
 
     @Override
@@ -147,36 +213,36 @@ public class CoursesFragment extends Fragment {
 
 
     private void onTaskComplete(String html) {
-        if(!html.equals("")){
+        if (!html.equals("")) {
             Document doc = Jsoup.parse(html);
             doc.setBaseUri("https://cow.ceng.metu.edu.tr");
 
 
-            Map<String,String> lcodes = new HashMap<String,String>();
+            Map<String, String> lcodes = new HashMap<String, String>();
 
             Elements names = doc.select("div");
             Element divs = null;
-            for(Element e:names){
-                if(e.attr("id").equals("mtm_menu_horizontal"))
+            for (Element e : names) {
+                if (e.attr("id").equals("mtm_menu_horizontal"))
                     divs = e;
             }
             Elements rnamesd = doc.select("td.content").select("tr").select("td");
-            if(divs!=null){
+            if (divs != null) {
                 int x = 0;
-                while(x<rnamesd.size()){
-                    lcodes.put(rnamesd.get(x).text(), rnamesd.get(x+1).text());
+                while (x < rnamesd.size()) {
+                    lcodes.put(rnamesd.get(x).text(), rnamesd.get(x + 1).text());
                     x += 2;
                 }
                 Elements courses = divs.select("a");
                 courses.remove(0);
-                for(Element t: courses){
-                    mAdapter.add(mAdapter.getItemCount(),new CourseItem(lcodes.get(t.text()),t.text(), t.attr("abs:href")));
+                for (Element t : courses) {
+                    mAdapter.add(mAdapter.getItemCount(), new CourseItem(lcodes.get(t.text()), t.text(), t.attr("abs:href")));
                 }
-            }else{
+            } else {
                 //This is not a solution
             }
-        }else{
-                //Network Problem
+        } else {
+            //Network Problem
         }
     }
 

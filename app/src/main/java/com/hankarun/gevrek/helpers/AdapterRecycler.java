@@ -58,6 +58,10 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
         activity = _activity;
     }
 
+    public void clear(){
+        mDataset.clear();
+    }
+
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
