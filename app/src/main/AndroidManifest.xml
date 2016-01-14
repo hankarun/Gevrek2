@@ -11,6 +11,16 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppThemeBase" >
+
+        <provider
+            android:name=".NewsContentProvider"
+            android:authorities="com.hankarun.gevrek" >
+        </provider>
+
+        <service
+            android:name=".NewsGroupIntentService"
+            android:exported="false"/>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
