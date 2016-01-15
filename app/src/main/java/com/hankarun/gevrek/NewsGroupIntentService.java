@@ -1,6 +1,8 @@
 package com.hankarun.gevrek;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -80,7 +82,6 @@ public class NewsGroupIntentService extends IntentService {
             publishResults(1,"courses");
         }
     }
-
 
     private void putVariables(String html) {
         getApplicationContext().getContentResolver().delete(NewsContentProvider.CONTENT_URI, null, null);

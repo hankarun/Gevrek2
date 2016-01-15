@@ -1,5 +1,6 @@
 package com.hankarun.gevrek.fragments;
 
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -51,7 +52,6 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
 
     private OnFragmentInteractionListener mListener;
 
-    private VolleyHelper volleyHelper;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -120,8 +120,12 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
         View view = inflater.inflate(R.layout.fragment_news_group, container, false);
         listview = (ExpandableListView) view.findViewById(R.id.expandableListView);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar3);
-        mProgressBar.setVisibility(View.GONE);
+
+        mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
+
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout1);
+        mSwipeRefreshLayout.setRefreshing(isMyServiceRunning(NewsGroupIntentService.class));
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -133,7 +137,8 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
         mSwipeRefreshLayout.post(new Runnable() {
             @Override
             public void run() {
-                mSwipeRefreshLayout.setRefreshing(true);
+                //mSwipeRefreshLayout.setRefreshing(true);
+                mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
             }
         });
         loadGroup();
@@ -150,6 +155,18 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(receiver, new IntentFilter("fetch"));
+        mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
+        //mSwipeRefreshLayout.setRefreshing(isMyServiceRunning(NewsGroupIntentService.class));
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

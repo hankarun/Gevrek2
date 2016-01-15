@@ -180,6 +180,8 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
     public void loadPages(final boolean clear){
         mSwipeRefreshLayout.setRefreshing(true);
+        mProgressBar.setVisibility(View.VISIBLE);
+
         volleyHelper = new VolleyHelper(getActivity());
         volleyHelper.postStringRequest(StaticTexts.MESSAGE_LIST_REQUEST, HttpPages.group_page + link, new Response.Listener<String>() {
             @Override
