@@ -1,14 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    signingConfigs {
-        config {
-            keyAlias 'gevrek'
-            keyPassword 'Forum9876'
-            storeFile file('/Users/hankarun/Desktop/a')
-            storePassword 'Forum9876'
-        }
-    }
+
     compileSdkVersion 23
     buildToolsVersion '23.0.2'
 
@@ -16,7 +9,7 @@ android {
         applicationId "com.hankarun.gevrek"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 39
+        versionCode 40
         versionName "4.61"
     }
     buildTypes {

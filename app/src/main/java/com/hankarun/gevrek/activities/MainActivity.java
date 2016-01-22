@@ -11,7 +11,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -30,14 +32,17 @@ import com.hankarun.gevrek.interfaces.LoginDialogReturn;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 import com.hankarun.gevrek.libs.VolleySingleton;
+import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 
-public class MainActivity extends AppCompatActivity implements AsyncResponse,LoginDialogReturn {
+
+public class MainActivity extends AppCompatActivity implements AsyncResponse, LoginDialogReturn {
 
     private Toolbar toolbar;
     private NavigationView nvDrawer;
@@ -74,49 +79,48 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.setDrawerListener(drawerToggle);
         TextView name = (TextView) findViewById(R.id.drawerHeaderUserName);
-        if(name!=null)
-        name.setText(SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.USER_REAL_NAME, ""));
+        if (name != null)
+            name.setText(SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.USER_REAL_NAME, ""));
         checkCreds();
 
         selectDrawerItem(nvDrawer.getMenu().getItem(0));
 
-        if(SharedPrefHelper.readPreferences(this,StaticTexts.AVATAR_METHOD,"9").equals("9"))
-            SharedPrefHelper.savePreferences(this,StaticTexts.AVATAR_METHOD,"0");
+        if (SharedPrefHelper.readPreferences(this, StaticTexts.AVATAR_METHOD, "9").equals("9"))
+            SharedPrefHelper.savePreferences(this, StaticTexts.AVATAR_METHOD, "0");
     }
 
-    private void checkCreds(){
+    private void checkCreds() {
         //Hafızadan usename ve password al.
         String username = SharedPrefHelper.readPreferences(this, StaticTexts.SHARED_PREF_LOGINNAME, "");
-        String password = SharedPrefHelper.readPreferences(this,StaticTexts.SHARED_PREF_PASSWORD,"");
+        String password = SharedPrefHelper.readPreferences(this, StaticTexts.SHARED_PREF_PASSWORD, "");
 
         //Boş olup olmadıklarını kontrol et.
 
-        if(username.equals("")||password.equals("")) {
+        if (username.equals("") || password.equals("")) {
             //Eğer boş ise dialog ekranını goster. ilk defa icin
             startLogin();
             //Bunun donuşunde http ile control et ve isim ile avatarı al
-        }
-        else {
+        } else {
             //Eğer boş değlse arka planda geçerlilikleri kontrol edilecek.
             testCredsWithNNTP(username, password);
         }
 
     }
 
-    private void testCredsWithNNTP(String user, String password){
-        NNTPHelper helper = new NNTPHelper(user,password);
+    private void testCredsWithNNTP(String user, String password) {
+        NNTPHelper helper = new NNTPHelper(user, password);
         helper.asyncResponse = this;
         helper.checkCreds();
     }
 
-    private void startLogin(){
+    private void startLogin() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivityForResult(intent, 9);
     }
 
     @Override
     public void onResponse(int feed) {
-        switch(feed) {
+        switch (feed) {
             case StaticTexts.FAIL:
                 startLogin();
                 break;
@@ -138,19 +142,32 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
                     Elements inputElements = loginform.select("tr");
 
                     TextView name = (TextView) findViewById(R.id.drawerHeaderUserName);
-                    SharedPrefHelper.savePreferences(getApplicationContext(),StaticTexts.USER_REAL_NAME,inputElements.get(5).select("td").text());
+                    SharedPrefHelper.savePreferences(getApplicationContext(), StaticTexts.USER_REAL_NAME, inputElements.get(5).select("td").text());
                     name.setText(inputElements.get(5).select("td").text());
 
-                    NetworkImageView image = (NetworkImageView) findViewById(R.id.drawerHeaderImage);
-                    ImageLoader mImageLoader = VolleySingleton.getInstance().getImageLoader();
-                    image.setImageUrl(inputElements.get(20).select("a").attr("abs:href"),mImageLoader);
+                    ImageView image = (ImageView) findViewById(R.id.drawerHeaderImage);
+
+                    Log.d("image", inputElements.get(20).select("a").attr("abs:href"));
+
+                    String username = SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_LOGINNAME, "");
+
+                    TextView detail = (TextView) findViewById(R.id.draweDetailText);
+                    detail.setText(username + "@ceng.metu.edu.tr");
+
+                    Picasso.with(getApplicationContext())
+                            .load("https://cow.ceng.metu.edu.tr/User/download_userPicture.php?username=" + username)
+                                    //.placeholder(R.drawable.ic_file_big)
+                                    //.error(R.drawable.ic_cloud_big)
+                            .into(image);
+                    //ImageLoader mImageLoader = VolleySingleton.getInstance().getImageLoader();
+                    //image.setImageUrl(inputElements.get(20).select("a").attr("abs:href"),mImageLoader);
                 }
             }
         });
     }
 
     private ActionBarDrawerToggle setupDrawerToggle() {
-        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.open,  R.string.close);
+        return new ActionBarDrawerToggle(this, mDrawer, toolbar, R.string.open, R.string.close);
     }
 
     @Override
@@ -184,56 +201,56 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
 
     private void selectDrawerItem(MenuItem menuItem) {
 
-            Fragment fragment = null;
-            String fragmentName = "";
-        if(checkUsername){
+        Fragment fragment = null;
+        String fragmentName = "";
+        if (checkUsername) {
             checkUsername = false;
             checkCreds();
         }
 
-            Class fragmentClass;
-            switch (menuItem.getItemId()) {
-                case R.id.nav_first_fragment:
-                    fragmentClass = NewsGroupFragment.class;
-                    fragmentName = "News";
-                    break;
-                case R.id.nav_second_fragment:
-                    fragmentClass = CoursesFragment.class;
-                    fragmentName = "Courses";
-                    break;
-                case R.id.nav_third_fragment:
-                    fragmentClass = EmailFragment.class;
-                    fragmentName = "Email";
-                    break;
-                case R.id.nav_settings:
-                    fragmentClass = SettingsFragment.class;
-                    fragmentName = "Settings";
-                    break;
-                default:
-                    fragmentClass = NewsGroupFragment.class;
-            }
+        Class fragmentClass;
+        switch (menuItem.getItemId()) {
+            case R.id.nav_first_fragment:
+                fragmentClass = NewsGroupFragment.class;
+                fragmentName = "News";
+                break;
+            case R.id.nav_second_fragment:
+                fragmentClass = CoursesFragment.class;
+                fragmentName = "Courses";
+                break;
+            case R.id.nav_third_fragment:
+                fragmentClass = EmailFragment.class;
+                fragmentName = "Email";
+                break;
+            case R.id.nav_settings:
+                fragmentClass = SettingsFragment.class;
+                fragmentName = "Settings";
+                break;
+            default:
+                fragmentClass = NewsGroupFragment.class;
+        }
 
-            try {
-                fragment = (Fragment) fragmentClass.newInstance();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container_body, fragment, fragmentName).commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container_body, fragment, fragmentName).commit();
 
-            menuItem.setChecked(true);
-            setTitle(menuItem.getTitle());
-            mDrawer.closeDrawers();
+        menuItem.setChecked(true);
+        setTitle(menuItem.getTitle());
+        mDrawer.closeDrawers();
 
     }
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==1) {
-                //Refresh fragment
-                reloadNewsFragment();
+        if (requestCode == 1) {
+            //Refresh fragment
+            reloadNewsFragment();
         }
         /*if(requestCode==2) {
             //selectDrawerItem(nvDrawer.getMenu().getItem(1));
@@ -241,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse,Log
         }*/
     }
 
-    private void reloadNewsFragment(){
+    private void reloadNewsFragment() {
         NewsGroupFragment tmp = (NewsGroupFragment) getSupportFragmentManager().findFragmentByTag("News");
         tmp.reload();
     }

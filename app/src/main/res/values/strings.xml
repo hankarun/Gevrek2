@@ -60,4 +60,5 @@
     <string name="download_when">Download when...</string>
     <string name="next_page">Load next page?</string>
     <string name="load">Load</string>
+    <string name="otheritem">Others</string>
 </resources>
