@@ -101,6 +101,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     }
 
     private View rootView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,7 +116,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             }
         });
 
-        array = new ArrayList<MessageHeader>();
+        array = new ArrayList<>();
         adapters = new MyBaseAdapter(getActivity().getApplicationContext(), array);
         mAdapter = new MyAdapter(array);
 

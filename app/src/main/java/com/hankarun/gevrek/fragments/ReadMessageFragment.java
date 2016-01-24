@@ -319,7 +319,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
     @Override
     public void onResponse(int feed) {
-        waitDialog.dismiss();
+        //waitDialog.dismiss();
         getActivity().setResult(1);
         getActivity().finish();
     }

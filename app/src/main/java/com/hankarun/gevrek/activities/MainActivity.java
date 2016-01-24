@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Response;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.NetworkImageView;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.fragments.CoursesFragment;
 import com.hankarun.gevrek.fragments.EmailFragment;
@@ -31,15 +29,12 @@ import com.hankarun.gevrek.interfaces.AsyncResponse;
 import com.hankarun.gevrek.interfaces.LoginDialogReturn;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
-import com.hankarun.gevrek.libs.VolleySingleton;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-
-import java.io.File;
 
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, LoginDialogReturn {
@@ -79,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.setDrawerListener(drawerToggle);
         TextView name = (TextView) findViewById(R.id.drawerHeaderUserName);
+
         if (name != null)
             name.setText(SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.USER_REAL_NAME, ""));
         checkCreds();
