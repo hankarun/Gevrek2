@@ -25,6 +25,7 @@ import java.io.StringWriter;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -126,7 +127,7 @@ public class NewsGroupIntentService extends IntentService {
             String urlParameters = "cow_username=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_LOGINNAME, "")
                     + "&cow_password=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_PASSWORD, "")
                     + "&cow_login=login";
-            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+            byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
             int postDataLength = postData.length;
             String request = myurl;
             URL url = new URL(request);

@@ -15,6 +15,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,10 +24,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
 import com.hankarun.gevrek.NewsContentProvider;
 import com.hankarun.gevrek.NewsGroupIntentService;
 import com.hankarun.gevrek.Newsgroup;
@@ -35,8 +38,16 @@ import com.hankarun.gevrek.Url;
 import com.hankarun.gevrek.activities.MessagesActivity;
 import com.hankarun.gevrek.activities.NewsGropuEditActivity;
 import com.hankarun.gevrek.database.NewsGroupTable;
+import com.hankarun.gevrek.helpers.SharedPrefHelper;
 import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.libs.HttpPages;
+import com.hankarun.gevrek.libs.StaticTexts;
+import com.squareup.picasso.Picasso;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +73,7 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
                 int resultCode = bundle.getInt("result");
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
+                loadusername();
             }
         }
     };
@@ -167,6 +179,43 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
             }
         }
         return false;
+    }
+
+    private void loadusername() {
+        VolleyHelper volleyHelper;
+        volleyHelper = new VolleyHelper(getActivity());
+        volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.login_page, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response != null) {
+                    Document doc = Jsoup.parse(response);
+                    Element loginform = doc.getElementById("edit_auth");
+
+                    Elements inputElements = loginform.select("tr");
+
+                    TextView name = (TextView) getActivity().findViewById(R.id.drawerHeaderUserName);
+                    SharedPrefHelper.savePreferences(getContext(), StaticTexts.USER_REAL_NAME, inputElements.get(5).select("td").text());
+                    name.setText(inputElements.get(5).select("td").text());
+
+                    ImageView image = (ImageView) getActivity().findViewById(R.id.drawerHeaderImage);
+
+                    Log.d("image", inputElements.get(20).select("a").attr("abs:href"));
+
+                    String username = SharedPrefHelper.readPreferences(getContext(), StaticTexts.SHARED_PREF_LOGINNAME, "");
+
+                    TextView detail = (TextView) getActivity().findViewById(R.id.draweDetailText);
+                    detail.setText(username + "@ceng.metu.edu.tr");
+
+                    Picasso.with(getContext())
+                            .load("https://cow.ceng.metu.edu.tr/User/download_userPicture.php?username=" + username)
+                                    //.placeholder(R.drawable.ic_file_big)
+                                    //.error(R.drawable.ic_cloud_big)
+                            .into(image);
+                    //ImageLoader mImageLoader = VolleySingleton.getInstance().getImageLoader();
+                    //image.setImageUrl(inputElements.get(20).select("a").attr("abs:href"),mImageLoader);
+                }
+            }
+        });
     }
 
     @Override

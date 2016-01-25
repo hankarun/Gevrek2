@@ -206,8 +206,6 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private String s;
 
     private void onTaskComplete(String html) {
-        Log.d("response",html);
-
         if (!html.equals("")) {
             Document doc = Jsoup.parse(html);
 
@@ -305,6 +303,7 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     }
 
     private void downloadImage(ImageView image, String url) {
+        if(!url.equals(""))
         Picasso.with(getActivity().getApplicationContext())
                 .load(url)
                 .placeholder(R.drawable.placeholder)
