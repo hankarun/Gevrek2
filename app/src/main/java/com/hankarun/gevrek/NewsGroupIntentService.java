@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.hankarun.gevrek.helpers.SharedPrefHelper;
@@ -21,10 +22,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NewsGroupIntentService extends IntentService {
@@ -77,9 +80,9 @@ public class NewsGroupIntentService extends IntentService {
             } else {
                 //This is not a solution
             }
-            publishResults(0,"courses");
+            publishResults(0, "courses");
         } else {
-            publishResults(1,"courses");
+            publishResults(1, "courses");
         }
     }
 
@@ -104,13 +107,13 @@ public class NewsGroupIntentService extends IntentService {
                     getApplicationContext().getContentResolver().insert(NewsContentProvider.CONTENT_URI, temp.toContentValues());
                 }
             }
-            publishResults(0,"fetch");
+            publishResults(0, "fetch");
         } else {
-            publishResults(1,"fetch");
+            publishResults(1, "fetch");
         }
     }
 
-    private void publishResults(int result,String s) {
+    private void publishResults(int result, String s) {
         Intent intent = new Intent(s);
         intent.putExtra("result", result);
         sendBroadcast(intent);
@@ -128,6 +131,7 @@ public class NewsGroupIntentService extends IntentService {
             String request = myurl;
             URL url = new URL(request);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
             conn.setDoOutput(true);
             conn.setInstanceFollowRedirects(false);
             conn.setRequestMethod("POST");
@@ -138,7 +142,25 @@ public class NewsGroupIntentService extends IntentService {
             try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
                 wr.write(postData);
             }
+
             is = conn.getInputStream();
+
+            final String COOKIES_HEADER = "Set-Cookie";
+            java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
+            Map<String, List<String>> headerFields = conn.getHeaderFields();
+            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
+
+            if (cookiesHeader != null) {
+                for (String cookie : cookiesHeader) {
+                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+                }
+            }
+
+            if (msCookieManager.getCookieStore().getCookies().size() > 0) {
+                //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
+                //conn.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
+                Log.d("cookies", msCookieManager.getCookieStore().getCookies().toString());
+            }
 
             // Convert the InputStream into a string
             StringWriter writer = new StringWriter();

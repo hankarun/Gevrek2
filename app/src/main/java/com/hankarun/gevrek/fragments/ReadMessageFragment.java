@@ -206,6 +206,8 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
     private String s;
 
     private void onTaskComplete(String html) {
+        Log.d("response",html);
+
         if (!html.equals("")) {
             Document doc = Jsoup.parse(html);
 

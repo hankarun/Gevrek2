@@ -1,6 +1,7 @@
 package com.hankarun.gevrek.helpers;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -9,35 +10,36 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.hankarun.gevrek.MyApplication;
 import com.hankarun.gevrek.libs.VolleySingleton;
 import com.hankarun.gevrek.libs.StaticTexts;
 
+import java.net.HttpCookie;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
-public class VolleyHelper{
+public class VolleyHelper {
     private RequestQueue queue;
     private int requestType = -1;
     private final Activity activity;
     public final Map<String, String> params;
 
-    public VolleyHelper(Activity _activity){
+    public VolleyHelper(Activity _activity) {
         activity = _activity;
 
         params = new HashMap<>();
     }
 
-    public void cancelRequest(){
-        if(requestType != -1)
+    public void cancelRequest() {
+        if (requestType != -1)
             queue.cancelAll(requestType);
     }
 
-    public void postStringRequest(final int requestType, String url, Response.Listener<String> responseListener){
+    public void postStringRequest(final int requestType, String url, Response.Listener<String> responseListener) {
         queue = VolleySingleton.getInstance().getRequestQueue();
         this.requestType = requestType;
-
-
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
@@ -45,12 +47,19 @@ public class VolleyHelper{
                     @Override
                     public void onErrorResponse(VolleyError error) {
                     }
-        }) {
+                }) {
             @Override
             protected Map<String, String> getParams() {
-                params.put("cow_username", SharedPrefHelper.readPreferences(activity, StaticTexts.SHARED_PREF_LOGINNAME, ""));
-                params.put("cow_password", SharedPrefHelper.readPreferences(activity, StaticTexts.SHARED_PREF_PASSWORD, ""));
-                params.put("cow_login", "login");
+                java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
+                if (msCookieManager.getCookieStore().getCookies().size() > 0) {
+                    List<HttpCookie> cookies = msCookieManager.getCookieStore().getCookies();
+                    Log.d("cookie", cookies.toString());
+                    params.put("Cookie", cookies.toString().substring(1, cookies.toString().length() - 1).replace(',', ';'));
+                } else {
+                    params.put("cow_username", SharedPrefHelper.readPreferences(activity, StaticTexts.SHARED_PREF_LOGINNAME, ""));
+                    params.put("cow_password", SharedPrefHelper.readPreferences(activity, StaticTexts.SHARED_PREF_PASSWORD, ""));
+                    params.put("cow_login", "login");
+                }
                 return params;
             }
 
@@ -68,7 +77,7 @@ public class VolleyHelper{
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
         //stringRequest.setShouldCache(false);
-        if(requestType == StaticTexts.READMESSAGES)
+        if (requestType == StaticTexts.READMESSAGES)
             stringRequest.setShouldCache(true);
         else
             stringRequest.setShouldCache(false);
