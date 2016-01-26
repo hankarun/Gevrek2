@@ -9,8 +9,8 @@ android {
         applicationId "com.hankarun.gevrek"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 41
-        versionName "4.61"
+        versionCode 43
+        versionName "4.7"
     }
     buildTypes {
         release {

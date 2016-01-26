@@ -1,34 +1,22 @@
 package com.hankarun.gevrek;
 
-import android.app.ActivityManager;
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.hankarun.gevrek.helpers.SharedPrefHelper;
+import com.android.volley.Response;
+import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.libs.CourseItem;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.HttpCookie;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NewsGroupIntentService extends IntentService {
@@ -121,6 +109,10 @@ public class NewsGroupIntentService extends IntentService {
     }
 
     private String downloadUrl(String myurl) throws IOException {
+        VolleyHelper volleyHelper;
+        volleyHelper = new VolleyHelper(getApplicationContext());
+        return volleyHelper.syncStringRequest(StaticTexts.REPLY_MESSAGE_GET, myurl);
+        /*
         InputStream is = null;
 
         try {
@@ -157,12 +149,6 @@ public class NewsGroupIntentService extends IntentService {
                 }
             }
 
-            if (msCookieManager.getCookieStore().getCookies().size() > 0) {
-                //While joining the Cookies, use ',' or ';' as needed. Most of the server are using ';'
-                //conn.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
-                Log.d("cookies", msCookieManager.getCookieStore().getCookies().toString());
-            }
-
             // Convert the InputStream into a string
             StringWriter writer = new StringWriter();
             IOUtils.copy(is, writer, "UTF-8");
@@ -172,6 +158,6 @@ public class NewsGroupIntentService extends IntentService {
             if (is != null) {
                 is.close();
             }
-        }
+        }*/
     }
 }

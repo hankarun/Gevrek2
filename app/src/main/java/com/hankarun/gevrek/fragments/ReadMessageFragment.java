@@ -252,7 +252,13 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             body.loadData(start + attach + bod.toString() + end, "text/html; charset=UTF-8", "UTF-8");
             body.setBackgroundColor(0x00000000);
 
-            String username = s.substring(0,s.indexOf("@"));
+            String username;
+            try {
+                username = s.substring(0, s.indexOf("@"));
+            }catch (Exception e){
+                username = "";
+            }
+
             if(username.equals(SharedPrefHelper.readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME, "").toString())){
                 showDelete = true;
                 if(menu != null){
