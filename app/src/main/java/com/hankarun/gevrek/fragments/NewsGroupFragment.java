@@ -187,7 +187,7 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.login_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if (response != null) {
+                if (response != null && !response.contains("You must login to view this page")) {
                     Document doc = Jsoup.parse(response);
                     Element loginform = doc.getElementById("edit_auth");
 
@@ -211,8 +211,6 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
                                     //.placeholder(R.drawable.ic_file_big)
                                     //.error(R.drawable.ic_cloud_big)
                             .into(image);
-                    //ImageLoader mImageLoader = VolleySingleton.getInstance().getImageLoader();
-                    //image.setImageUrl(inputElements.get(20).select("a").attr("abs:href"),mImageLoader);
                 }
             }
         });

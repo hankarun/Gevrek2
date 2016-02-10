@@ -232,7 +232,13 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
 
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(title);
 
-            String fpps = tmp.substring(fbb, tmp.length());
+            String fpps;
+            try {
+                fpps = tmp.substring(fbb, tmp.length());
+            } catch (Exception e){
+                fpps = "";
+            }
+
             from.setText("");
             try {
                 from.setText(fpps.substring(6, fpps.indexOf("(") - 1)); //author
@@ -244,7 +250,12 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             s = es.select("a").attr("href");
             s = s.replace("mailto:","");
 
-            date.setText(tmp.substring(dbb + 6, dbb + 20)); //date
+            try {
+                date.setText(tmp.substring(dbb + 6, dbb + 20)); //date
+            }catch (Exception e){
+                date.setText("");
+            }
+
 
             Elements bod = doc.select("div.np_article_body");
             String start = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html\" charset=\"UTF-8\" /></head><body>";
