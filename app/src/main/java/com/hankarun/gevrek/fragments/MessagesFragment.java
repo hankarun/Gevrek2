@@ -1,6 +1,5 @@
 package com.hankarun.gevrek.fragments;
 
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,18 +11,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,10 +56,11 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     private MyAdapter mAdapter;
     private ArrayList<MessageHeader> array;
 
+
     private boolean loading = true;
 
 
-    public MessagesFragment(){
+    public MessagesFragment() {
 
     }
 
@@ -89,12 +86,12 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
         if (id == R.id.action_settings) {
             //Burada cevaplama dialogu gözükecek.
-            PostDialogHelper postDialogHelper = new PostDialogHelper(getActivity(),getActivity());
+            PostDialogHelper postDialogHelper = new PostDialogHelper(getActivity(), getActivity());
             postDialogHelper.answer = this;
             Bundle args = new Bundle();
             args.putInt("type", StaticTexts.REPLY_MESSAGE_GET);
             args.putString("link", HttpPages.group_page + reply);
-            postDialogHelper.dialogShow(args,getActivity());
+            postDialogHelper.dialogShow(args, getActivity());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -129,7 +126,6 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         vies.setAdapter(mAdapter);
 
 
-
         vies.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -140,8 +136,8 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
                 if (loading) {
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                        if(currentPage<totalPage){
-                            link = stringMap.get(currentPage+1);
+                        if (currentPage < totalPage) {
+                            link = stringMap.get(currentPage + 1);
                             Snackbar.make(rootView, R.string.next_page, Snackbar.LENGTH_SHORT)
                                     .setAction(R.string.load, new View.OnClickListener() {
                                         @Override
@@ -173,13 +169,13 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         return rootView;
     }
 
-    public void link(String link, String grouName){
+    public void link(String link, String grouName) {
         this.groupName = grouName;
         this.link = link;
         loadPages(true);
     }
 
-    public void loadPages(final boolean clear){
+    public void loadPages(final boolean clear) {
         mSwipeRefreshLayout.setRefreshing(true);
         mProgressBar.setVisibility(View.VISIBLE);
 
@@ -195,9 +191,9 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         });
     }
 
-    private void onTaskComplete(String html, boolean clear){
-        if(!html.equals("")){
-            if(clear){
+    private void onTaskComplete(String html, boolean clear) {
+        if (!html.equals("")) {
+            if (clear) {
                 array.clear();
             }
             Document doc = Jsoup.parse(html);
@@ -207,14 +203,14 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             Elements table = doc.select("table.np_thread_table").select("tr");
             reply = doc.select("a.np_button").get(0).attr("href");
             table.remove(0);
-            for(Element s : table){
+            for (Element s : table) {
                 MessageHeader tmp = new MessageHeader();
                 Elements trs = s.select("td");
-                if (s.select("font").size()>0)
+                if (s.select("font").size() > 0)
                     tmp.color = s.select("font").attr("color");
                 tmp.date = trs.get(0).text();
                 tmp.read = trs.get(1).select("a").attr("class").equals("read");
-                for (Element dd:trs.get(1).select("img"))
+                for (Element dd : trs.get(1).select("img"))
                     tmp.images.add(dd.attr("alt"));
                 tmp.header = trs.get(1).text();
                 tmp.href = trs.get(1).select("a").attr("href");
@@ -250,17 +246,17 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
                 }
             });*/
 
-        }else{
-            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem,Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), R.string.network_problem, Toast.LENGTH_SHORT).show();
             getActivity().finish();
         }
     }
 
     private int currentPage;
     private int totalPage;
-    private Map<Integer,String> stringMap;
+    private Map<Integer, String> stringMap;
 
-    private void setPages(Document doc){
+    private void setPages(Document doc) {
         stringMap = new HashMap<>();
         Elements inner = doc.select("span.np_pages");
         Element selected = inner.select("span.np_pages_selected").first();
@@ -268,7 +264,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
         currentPage = Integer.parseInt(selected.text());
         int x = 1;
-        for(Element e:unselected){
+        for (Element e : unselected) {
             x = x + 1;
             stringMap.put(Integer.parseInt(e.text()), e.attr("href"));
         }
@@ -281,7 +277,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     }
 
 
-    public class MessageHeader{
+    public class MessageHeader {
         public String header;
         public String date;
         public boolean read;
@@ -291,9 +287,9 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         public String author;
         public String reply;
 
-        public String getImg(){
+        public String getImg() {
             String tmp = "";
-            for(String a: images)
+            for (String a : images)
                 tmp += a;
             return tmp;
         }
@@ -303,7 +299,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         final List<MessageHeader> headers;
         final Context context;
 
-        public MyBaseAdapter(Context _context, List<MessageHeader> _headers){
+        public MyBaseAdapter(Context _context, List<MessageHeader> _headers) {
             context = _context;
             headers = _headers;
         }
@@ -323,7 +319,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             return i;
         }
 
-        private class ImageHolder{
+        private class ImageHolder {
             public LinearLayout images;
         }
 
@@ -339,7 +335,7 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
                 view.setTag(tmps);
 
-            }else{
+            } else {
                 tmps = (ImageHolder) view.getTag();
             }
             TextView body = (TextView) view.findViewById(R.id.body);
@@ -352,27 +348,21 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
 
             tmps.images.removeAllViews();
 
-            for(int x=0; x<imgs.length(); x++){
+            for (int x = 0; x < imgs.length(); x++) {
                 ImageView tmp = new ImageView(context);
-                if(imgs.charAt(x) == ' ')
+                if (imgs.charAt(x) == ' ')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.b));
-                else
-                if(imgs.charAt(x) == '*')
+                else if (imgs.charAt(x) == '*')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.s));
-                else
-                if(imgs.charAt(x) == 'o')
+                else if (imgs.charAt(x) == 'o')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.n));
-                else
-                if(imgs.charAt(x) == '+')
+                else if (imgs.charAt(x) == '+')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.tt));
-                else
-                if(imgs.charAt(x) == '-')
+                else if (imgs.charAt(x) == '-')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.g));
-                else
-                if(imgs.charAt(x) == '|')
+                else if (imgs.charAt(x) == '|')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.l));
-                else
-                if(imgs.charAt(x) == '`')
+                else if (imgs.charAt(x) == '`')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.k));
 
                 Toolbar.LayoutParams params = new Toolbar.LayoutParams(40, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -385,12 +375,12 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             }
 
             String reads;
-            if(headers.get(i).read)
-                reads = "<font color=\"#999900\">"+header + headers.get(i).header+"</font>";
+            if (headers.get(i).read)
+                reads = "<font color=\"#999900\">" + header + headers.get(i).header + "</font>";
             else
-                reads = "<font color=\"#26598F\">"+header + headers.get(i).header+"</font>";
+                reads = "<font color=\"#26598F\">" + header + headers.get(i).header + "</font>";
 
-            if(i % 2 == 0)
+            if (i % 2 == 0)
                 layout.setBackgroundColor(Color.parseColor("#EEEEEE"));
             else
                 layout.setBackgroundColor(Color.parseColor("#ffffff"));
@@ -405,9 +395,14 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
     @Override
     public void onStop() {
         super.onStop();
-        if( volleyHelper != null)
+        if (volleyHelper != null)
             volleyHelper.cancelRequest();
     }
+
+
+
+
+
 
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
@@ -450,10 +445,10 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             String header = "<?xml version=\"1.0\" encoding=\"iso-8859-9\" ?>";
 
             String reads;
-            if(cHeader.read)
-                reads = "<font color=\"#999900\">"+header + cHeader.header+"</font>";
+            if (cHeader.read)
+                reads = "<font color=\"#999900\">" + header + cHeader.header + "</font>";
             else
-                reads = "<font color=\"#26598F\">"+header + cHeader.header+"</font>";
+                reads = "<font color=\"#26598F\">" + header + cHeader.header + "</font>";
 
             addImages(holder.lines, cHeader.getImg());
 
@@ -486,30 +481,24 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             holder.txtAuthor.setText(cHeader.author);
         }
 
-        private LinearLayout addImages(LinearLayout layout, String imgs){
+        private LinearLayout addImages(LinearLayout layout, String imgs) {
             layout.removeAllViews();
 
-            for(int x=0; x<imgs.length(); x++){
+            for (int x = 0; x < imgs.length(); x++) {
                 ImageView tmp = new ImageView(getContext());
-                if(imgs.charAt(x) == ' ')
+                if (imgs.charAt(x) == ' ')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.b));
-                else
-                if(imgs.charAt(x) == '*')
+                else if (imgs.charAt(x) == '*')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.s));
-                else
-                if(imgs.charAt(x) == 'o')
+                else if (imgs.charAt(x) == 'o')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.n));
-                else
-                if(imgs.charAt(x) == '+')
+                else if (imgs.charAt(x) == '+')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.tt));
-                else
-                if(imgs.charAt(x) == '-')
+                else if (imgs.charAt(x) == '-')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.g));
-                else
-                if(imgs.charAt(x) == '|')
+                else if (imgs.charAt(x) == '|')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.l));
-                else
-                if(imgs.charAt(x) == '`')
+                else if (imgs.charAt(x) == '`')
                     tmp.setImageDrawable(getResources().getDrawable(R.mipmap.k));
 
                 Toolbar.LayoutParams params = new Toolbar.LayoutParams(40, ViewGroup.LayoutParams.MATCH_PARENT);

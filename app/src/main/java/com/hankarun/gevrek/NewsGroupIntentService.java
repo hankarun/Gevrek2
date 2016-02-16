@@ -112,52 +112,5 @@ public class NewsGroupIntentService extends IntentService {
         VolleyHelper volleyHelper;
         volleyHelper = new VolleyHelper(getApplicationContext());
         return volleyHelper.syncStringRequest(StaticTexts.REPLY_MESSAGE_GET, myurl);
-        /*
-        InputStream is = null;
-
-        try {
-            String urlParameters = "cow_username=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_LOGINNAME, "")
-                    + "&cow_password=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_PASSWORD, "")
-                    + "&cow_login=login";
-            byte[] postData = urlParameters.getBytes(Charset.forName("UTF-8"));
-            int postDataLength = postData.length;
-            String request = myurl;
-            URL url = new URL(request);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-
-            conn.setDoOutput(true);
-            conn.setInstanceFollowRedirects(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-            conn.setUseCaches(false);
-            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-                wr.write(postData);
-            }
-
-            is = conn.getInputStream();
-
-            final String COOKIES_HEADER = "Set-Cookie";
-            java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
-            Map<String, List<String>> headerFields = conn.getHeaderFields();
-            List<String> cookiesHeader = headerFields.get(COOKIES_HEADER);
-
-            if (cookiesHeader != null) {
-                for (String cookie : cookiesHeader) {
-                    msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                }
-            }
-
-            // Convert the InputStream into a string
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(is, writer, "UTF-8");
-            return writer.toString();
-
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }*/
     }
 }

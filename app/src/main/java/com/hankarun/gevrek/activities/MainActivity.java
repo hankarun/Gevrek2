@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
                 startLogin();
                 break;
             case StaticTexts.SUCCESS:
-                //loadusername();
+                loadusername();
                 break;
         }
     }
