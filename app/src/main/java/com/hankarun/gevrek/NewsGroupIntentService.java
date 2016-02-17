@@ -45,7 +45,6 @@ public class NewsGroupIntentService extends IntentService {
             Document doc = Jsoup.parse(html);
             doc.setBaseUri("https://cow.ceng.metu.edu.tr");
 
-
             Map<String, String> lcodes = new HashMap<String, String>();
 
             Elements names = doc.select("div");

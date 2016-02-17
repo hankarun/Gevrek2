@@ -5,4 +5,14 @@
     android:minHeight="?attr/actionBarSize"
     android:background="@color/primaryColor"
     local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    local:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+    local:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toolbar_title"
+        android:transitionName="title"
+        android:textStyle="bold"
+        android:textSize="@dimen/toolbar_title_text_size"
+        android:textColor="#FFF" />
+
+</android.support.v7.widget.Toolbar>

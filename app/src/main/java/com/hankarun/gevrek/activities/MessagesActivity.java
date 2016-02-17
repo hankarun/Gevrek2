@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.widget.TextView;
 
 import com.hankarun.gevrek.fragments.MessagesFragment;
 import com.hankarun.gevrek.R;
@@ -28,6 +29,7 @@ public class MessagesActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         articleFrag = (MessagesFragment)
                 getSupportFragmentManager().findFragmentById(R.id.fragment);
@@ -36,7 +38,7 @@ public class MessagesActivity extends AppCompatActivity {
         Intent iin = getIntent();
         Bundle b = iin.getExtras();
         articleFrag.link(b.getString("link"),b.getString("name"));
-        getSupportActionBar().setTitle(b.getString("name"));
+        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText(b.getString("name"));
     }
 
 

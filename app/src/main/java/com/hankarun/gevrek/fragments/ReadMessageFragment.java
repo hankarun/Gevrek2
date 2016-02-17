@@ -195,9 +195,9 @@ public class ReadMessageFragment extends Fragment implements LoginDialogReturn,A
             //NNTP ile delete yapılacak.
             NNTPHelper nntpHelper = new NNTPHelper(
                     readPreferences(getActivity(), StaticTexts.SHARED_PREF_LOGINNAME, ""),
-                    readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD, "")
+                    readPreferences(getActivity(), StaticTexts.SHARED_PREF_PASSWORD, ""),
+                    this
             );
-            nntpHelper.asyncResponse = this;
             nntpHelper.deleteArticle(mid, s, "metu.ceng." + groupname, s);
         }
         return super.onOptionsItemSelected(item);

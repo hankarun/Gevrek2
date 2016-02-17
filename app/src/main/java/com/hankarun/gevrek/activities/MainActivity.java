@@ -35,16 +35,19 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.w3c.dom.Text;
 
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse, LoginDialogReturn {
 
     private Toolbar toolbar;
-    private NavigationView nvDrawer;
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle drawerToggle;
-    private VolleyHelper volleyHelper;
     public boolean checkUsername = false;
+
+    private void setToolbarTittle(String s){
+        ((TextView)toolbar.findViewById(R.id.toolbar_title)).setText(s);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +59,10 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        nvDrawer = (NavigationView) findViewById(R.id.nvView);
+
+        NavigationView nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawerLayout);
 
@@ -104,9 +109,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
     }
 
     private void testCredsWithNNTP(String user, String password) {
-        NNTPHelper helper = new NNTPHelper(user, password);
-        helper.asyncResponse = this;
-        helper.checkCreds();
+        new NNTPHelper(user, password, this).checkCreds();
     }
 
     private void startLogin() {
@@ -127,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
     }
 
     private void loadusername() {
-        volleyHelper = new VolleyHelper(this);
+        VolleyHelper volleyHelper = new VolleyHelper(this);
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.login_page, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
         fragmentManager.beginTransaction().replace(R.id.container_body, fragment, fragmentName).commit();
 
         menuItem.setChecked(true);
-        setTitle(menuItem.getTitle());
+        setToolbarTittle(menuItem.getTitle().toString());
         mDrawer.closeDrawers();
 
     }
@@ -256,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse, Lo
 
     private void reloadNewsFragment() {
         NewsGroupFragment tmp = (NewsGroupFragment) getSupportFragmentManager().findFragmentByTag("News");
-        tmp.reload();
+        tmp.loadGroup();
     }
 
     @Override

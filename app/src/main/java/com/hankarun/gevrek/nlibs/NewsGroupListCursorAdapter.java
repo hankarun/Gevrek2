@@ -67,7 +67,7 @@ public class NewsGroupListCursorAdapter extends RecyclerViewCursorAdapter<NewsGr
             final int position = recyclerView.getChildLayoutPosition(view);
             if (position != RecyclerView.NO_POSITION) {
                 final Cursor cursor = this.getItem(position);
-                this.onItemClickListener.onItemClicked(cursor);
+                this.onItemClickListener.onItemClicked(cursor, view);
             }
         }
     }
@@ -104,6 +104,6 @@ public class NewsGroupListCursorAdapter extends RecyclerViewCursorAdapter<NewsGr
     }
 
     public interface OnItemClickListener {
-        void onItemClicked(Cursor cursor);
+        void onItemClicked(Cursor cursor, View view);
     }
 }

@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.hankarun.gevrek.MyApplication;
 import com.hankarun.gevrek.NewsGroupIntentService;
 import com.hankarun.gevrek.R;
 import com.hankarun.gevrek.helpers.NNTPHelper;
@@ -84,9 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(validate()) {
             mDialog = new WaitDialogHelper(this);
             mDialog.show();
-            NNTPHelper helper = new NNTPHelper(mUsername.getText().toString(), mPassword.getText().toString());
-            helper.asyncResponse = this;
-            helper.checkCreds();
+            new NNTPHelper(mUsername.getText().toString(), mPassword.getText().toString(),this).checkCreds();
         }
     }
 
@@ -101,6 +100,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case StaticTexts.SUCCESS:
                 //Bilgileri kaydedecek.
                 saveCreds(mUsername.getText().toString(), mPassword.getText().toString());
+                java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
+                msCookieManager.getCookieStore().removeAll();
                 Intent mServiceIntent = new Intent(this, NewsGroupIntentService.class);
                 mServiceIntent.setData(Uri.parse(HttpPages.courses_page));
                 mServiceIntent.putExtra("type","0");

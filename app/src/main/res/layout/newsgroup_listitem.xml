@@ -23,5 +23,6 @@
         android:textColor="#000"
         tools:text="Contact Name"
         android:layout_margin="4dp"
+        android:transitionName="title"
         android:layout_below="@+id/section_title" />
 </RelativeLayout>

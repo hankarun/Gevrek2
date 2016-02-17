@@ -1,12 +1,14 @@
 package com.hankarun.gevrek.fragments;
 
 import android.app.ActivityManager;
+import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -45,12 +47,17 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, NewsGroupListCursorAdapter.OnItemClickListener {
-    private ProgressBar mProgressBar;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
-    private OnFragmentInteractionListener mListener;
-
-    private SwipeRefreshLayout mSwipeRefreshLayout;
+public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,
+        NewsGroupListCursorAdapter.OnItemClickListener {
+    @Bind(R.id.progressBar3)
+    ProgressBar mProgressBar;
+    @Bind(R.id.swipe_refresh_layout1)
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    @Bind(R.id.group_recycler)
+    RecyclerView mRecyclerView;
 
     private NewsGroupListCursorAdapter mAdapter;
 
@@ -61,13 +68,10 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
             if (bundle != null) {
                 mProgressBar.setVisibility(View.GONE);
                 mSwipeRefreshLayout.setRefreshing(false);
+                getLoaderManager().restartLoader(0,null,NewsGroupFragment.this);
             }
         }
     };
-
-    public void reload() {
-        loadGroup();
-    }
 
     public NewsGroupFragment() {
     }
@@ -101,28 +105,22 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news_group, container, false);
 
-        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.group_recycler);
+        ButterKnife.bind(this,view);
+
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(mAdapter);
-
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar3);
-
         mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
-
-
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh_layout1);
         mSwipeRefreshLayout.setRefreshing(isMyServiceRunning(NewsGroupIntentService.class));
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                reload();
+                loadGroup();
             }
         });
 
@@ -135,12 +133,6 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
         });
         loadGroup();
         return view;
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -164,12 +156,10 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        //String type = args.getString("type");
         switch (id) {
             case 0:
                 return new CursorLoader(getActivity(),
@@ -194,24 +184,27 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
 
     //Recyclerview item clicked.
     @Override
-    public void onItemClicked(Cursor cursor) {
+    public void onItemClicked(Cursor cursor, View view) {
         if (!cursor.getString(cursor.getColumnIndex(NewsGroupTable.NEWSGROUP_COUNT)).equals("(0)")) {
             Intent intent = new Intent(getActivity(), MessagesActivity.class);
             intent.putExtra("name", cursor.getString(cursor.getColumnIndex(NewsGroupTable.NEWSGROUP_NAME)));
             intent.putExtra("link", cursor.getString(cursor.getColumnIndex(NewsGroupTable.NEWSGROUP_URL)));
-            startActivity(intent);
-            getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "title");
+                getActivity().startActivity(intent,options.toBundle());
+            } else{
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+            }
         }
     }
 
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    private void loadGroup() {
+    public void loadGroup() {
         Intent mServiceIntent = new Intent(getActivity(), NewsGroupIntentService.class);
         mServiceIntent.setData(Uri.parse(HttpPages.left_page));
         mServiceIntent.putExtra("type", "0");
+
         getActivity().startService(mServiceIntent);
         mSwipeRefreshLayout.setRefreshing(true);
         getLoaderManager().initLoader(0, null, this);
