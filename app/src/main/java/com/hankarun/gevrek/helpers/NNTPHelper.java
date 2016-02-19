@@ -28,9 +28,10 @@ public class NNTPHelper {
     private final String username;
     private final String password;
 
-    public NNTPHelper(String _name, String _pass){
+    public NNTPHelper(String _name, String _pass, AsyncResponse asyncResponse){
         username = _name;
         password = _pass;
+        this.asyncResponse = asyncResponse;
     }
 
     public void deleteArticle(String articleNumber,String sender, String mGroup, String mFrom){

@@ -1,6 +1,7 @@
 package com.hankarun.gevrek.fragments;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -103,6 +104,9 @@ public class CoursesFragment extends Fragment implements LoaderManager.LoaderCal
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar2);
 
+        mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
+
+
         mRecyclerView.setHasFixedSize(true);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -141,6 +145,7 @@ public class CoursesFragment extends Fragment implements LoaderManager.LoaderCal
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(receiver, new IntentFilter("courses"));
+        mProgressBar.setVisibility(isMyServiceRunning(NewsGroupIntentService.class) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -168,6 +173,16 @@ public class CoursesFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public interface OnFragmentInteractionListener {

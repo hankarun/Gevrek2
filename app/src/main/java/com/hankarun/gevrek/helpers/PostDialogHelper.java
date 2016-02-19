@@ -51,7 +51,6 @@ public class PostDialogHelper extends Dialog implements
             @Override
             public boolean onKey(DialogInterface arg0, int keyCode,
                                  KeyEvent event) {
-                // TODO Auto-generated method stub
                 if (keyCode == KeyEvent.KEYCODE_BACK) {
                     a.finish();
                 }
@@ -163,7 +162,7 @@ public class PostDialogHelper extends Dialog implements
         volleyHelper.params.put("group", newsgroup);
         volleyHelper.params.put("newsgroups",newsgroups);
         volleyHelper.params.put("subject",mSubject.getText().toString());
-        volleyHelper.params.put("cc",from);
+        //volleyHelper.params.put("cc",from);
         volleyHelper.params.put("type","post");
         volleyHelper.postStringRequest(StaticTexts.REPLY_MESSAGE_GET, HttpPages.post_page, new Response.Listener<String>() {
             @Override

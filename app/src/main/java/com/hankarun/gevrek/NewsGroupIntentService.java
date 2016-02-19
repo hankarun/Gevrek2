@@ -4,24 +4,18 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.hankarun.gevrek.helpers.SharedPrefHelper;
+import com.android.volley.Response;
+import com.hankarun.gevrek.helpers.VolleyHelper;
 import com.hankarun.gevrek.libs.CourseItem;
 import com.hankarun.gevrek.libs.HttpPages;
 import com.hankarun.gevrek.libs.StaticTexts;
 
-import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +45,6 @@ public class NewsGroupIntentService extends IntentService {
             Document doc = Jsoup.parse(html);
             doc.setBaseUri("https://cow.ceng.metu.edu.tr");
 
-
             Map<String, String> lcodes = new HashMap<String, String>();
 
             Elements names = doc.select("div");
@@ -75,12 +68,11 @@ public class NewsGroupIntentService extends IntentService {
             } else {
                 //This is not a solution
             }
-            publishResults(0,"courses");
+            publishResults(0, "courses");
         } else {
-            publishResults(1,"courses");
+            publishResults(1, "courses");
         }
     }
-
 
     private void putVariables(String html) {
         getApplicationContext().getContentResolver().delete(NewsContentProvider.CONTENT_URI, null, null);
@@ -103,51 +95,21 @@ public class NewsGroupIntentService extends IntentService {
                     getApplicationContext().getContentResolver().insert(NewsContentProvider.CONTENT_URI, temp.toContentValues());
                 }
             }
-            publishResults(0,"fetch");
+            publishResults(0, "fetch");
         } else {
-            publishResults(1,"fetch");
+            publishResults(1, "fetch");
         }
     }
 
-    private void publishResults(int result,String s) {
+    private void publishResults(int result, String s) {
         Intent intent = new Intent(s);
         intent.putExtra("result", result);
         sendBroadcast(intent);
     }
 
     private String downloadUrl(String myurl) throws IOException {
-        InputStream is = null;
-
-        try {
-            String urlParameters = "cow_username=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_LOGINNAME, "")
-                    + "&cow_password=" + SharedPrefHelper.readPreferences(getApplicationContext(), StaticTexts.SHARED_PREF_PASSWORD, "")
-                    + "&cow_login=login";
-            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-            int postDataLength = postData.length;
-            String request = myurl;
-            URL url = new URL(request);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setDoOutput(true);
-            conn.setInstanceFollowRedirects(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset", "utf-8");
-            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-            conn.setUseCaches(false);
-            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-                wr.write(postData);
-            }
-            is = conn.getInputStream();
-
-            // Convert the InputStream into a string
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(is, writer, "UTF-8");
-            return writer.toString();
-
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
+        VolleyHelper volleyHelper;
+        volleyHelper = new VolleyHelper(getApplicationContext());
+        return volleyHelper.syncStringRequest(StaticTexts.REPLY_MESSAGE_GET, myurl);
     }
 }
