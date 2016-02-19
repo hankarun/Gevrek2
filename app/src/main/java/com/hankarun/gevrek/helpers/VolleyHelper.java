@@ -43,50 +43,10 @@ public class VolleyHelper {
     public String syncStringRequest(final int requestType, String url) {
         RequestFuture<String> future = RequestFuture.newFuture();
         queue = VolleySingleton.getInstance().getRequestQueue();
+        this.requestType = requestType;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, future,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Volley Hata", error.toString());
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
-                if (msCookieManager.getCookieStore().getCookies().size() > 0) {
-                    List<HttpCookie> cookies = msCookieManager.getCookieStore().getCookies();
+        StringRequest stringRequest = createRequest(url,future);
 
-                    params.put("Cookie", cookies.toString().substring(1, cookies.toString().length() - 1).replace(',', ';'));
-                } else {
-                    params.put("cow_username", SharedPrefHelper.readPreferences(context, StaticTexts.SHARED_PREF_LOGINNAME, ""));
-                    params.put("cow_password", SharedPrefHelper.readPreferences(context, StaticTexts.SHARED_PREF_PASSWORD, ""));
-                    params.put("cow_login", "login");
-                }
-                return params;
-            }
-
-            @Override
-            protected Response parseNetworkResponse(NetworkResponse response) {
-                Map headers = response.headers;
-                String cookie = (String) headers.get("Set-Cookie");
-                java.net.CookieManager msCookieManager = MyApplication.msCookieManager;
-                msCookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
-                return super.parseNetworkResponse(response);
-            }
-
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Content-Type", "application/x-www-form-urlencoded");
-                return params;
-            }
-        };
-        stringRequest.setTag(requestType);
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
-                1000,
-                3,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
         try {
             return future.get();
@@ -102,7 +62,18 @@ public class VolleyHelper {
         queue = VolleySingleton.getInstance().getRequestQueue();
         this.requestType = requestType;
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, responseListener,
+        StringRequest stringRequest = createRequest(url,responseListener);
+
+        if (requestType == StaticTexts.READMESSAGES)
+            stringRequest.setShouldCache(true);
+        else
+            stringRequest.setShouldCache(false);
+
+        queue.add(stringRequest);
+    }
+
+    private StringRequest createRequest(String url, Response.Listener<String> responseListener){
+        StringRequest stringRequest = new  StringRequest(Request.Method.POST, url, responseListener,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
@@ -141,18 +112,13 @@ public class VolleyHelper {
                 return params;
             }
         };
+
         stringRequest.setTag(requestType);
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 1000,
                 3,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
 
-        //stringRequest.setShouldCache(false);
-        if (requestType == StaticTexts.READMESSAGES)
-            stringRequest.setShouldCache(true);
-        else
-            stringRequest.setShouldCache(false);
-
-        queue.add(stringRequest);
+        return stringRequest;
     }
 }
