@@ -10,6 +10,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -144,10 +146,12 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
     }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
+        if(getActivity()!=null) {
+            ActivityManager manager = (ActivityManager) getActivity().getSystemService(Context.ACTIVITY_SERVICE);
+            for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+                if (serviceClass.getName().equals(service.service.getClassName())) {
+                    return true;
+                }
             }
         }
         return false;
@@ -190,13 +194,8 @@ public class NewsGroupFragment extends Fragment implements LoaderManager.LoaderC
             intent.putExtra("name", cursor.getString(cursor.getColumnIndex(NewsGroupTable.NEWSGROUP_NAME)));
             intent.putExtra("link", cursor.getString(cursor.getColumnIndex(NewsGroupTable.NEWSGROUP_URL)));
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(getActivity(), view, "title");
-                getActivity().startActivity(intent,options.toBundle());
-            } else{
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
-            }
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), view, "title");
+            ActivityCompat.startActivity(getActivity(),intent, options.toBundle());
         }
     }
 

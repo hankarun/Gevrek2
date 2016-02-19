@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -73,6 +75,8 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
         }
         setHasOptionsMenu(true);
     }
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -349,9 +353,14 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
             tmps.images.removeAllViews();
 
             for (int x = 0; x < imgs.length(); x++) {
+
                 ImageView tmp = new ImageView(context);
-                if (imgs.charAt(x) == ' ')
+                Toolbar.LayoutParams params = new Toolbar.LayoutParams(40, ViewGroup.LayoutParams.MATCH_PARENT);
+
+                if (imgs.charAt(x) == ' ') {
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.b));
+                    params.width = params.width / x;
+                }
                 else if (imgs.charAt(x) == '*')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.s));
                 else if (imgs.charAt(x) == 'o')
@@ -365,7 +374,6 @@ public class MessagesFragment extends Fragment implements LoginDialogReturn {
                 else if (imgs.charAt(x) == '`')
                     tmp.setImageDrawable(view.getResources().getDrawable(R.mipmap.k));
 
-                Toolbar.LayoutParams params = new Toolbar.LayoutParams(40, ViewGroup.LayoutParams.MATCH_PARENT);
                 params.height = ViewGroup.LayoutParams.MATCH_PARENT;
 
                 tmp.setLayoutParams(params);
